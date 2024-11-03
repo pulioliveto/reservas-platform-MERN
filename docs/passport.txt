@@ -1,0 +1,2 @@
+express-session es un middleware que permite gestionar sesiones en Express. Passport lo utiliza para almacenar el estado de inicio de sesión del usuario.
+passport.session() permite a Passport mantener las sesiones de autenticación entre diferentes solicitudes.
