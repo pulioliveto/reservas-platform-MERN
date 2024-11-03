@@ -3,6 +3,17 @@ const router = express.Router();
 const Business = require('../models/Business');
 const upload = require('../upload');// Middleware de subida de archivos
 
+// Configuración de multer para almacenar los archivos en una carpeta local llamada 'uploads'
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage });
+
 // Crear un nuevo negocio
 router.post('/create', upload.single('logo'), async (req, res) => {
   try {

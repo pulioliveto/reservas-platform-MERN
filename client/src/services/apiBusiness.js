@@ -1,15 +1,25 @@
 const API_URL = "http://localhost:5000/api/businesses"; // Ajusta si es necesario
 
 // Crear negocio
-export const createBusiness = async (businessData, token) => {
+export const createBusiness = async (formData, token) => {
   try {
+
+    const formDataObj = new FormData();
+    formDataObj.append("name", formData.name);
+    formDataObj.append("type", formData.type);
+    formDataObj.append("address", formData.address);
+    formDataObj.append("phone", formData.phone);
+
+    if (formData.logo) {
+      formDataObj.append("logo", formData.logo);
+    }
     const response = await fetch(`${API_URL}/businesses`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(businessData)
+      body: JSON.stringify(formData)
     });
 
     if (!response.ok) throw new Error('Error al crear el negocio');
