@@ -1,30 +1,46 @@
 const express = require('express');
 const router = express.Router();
 const Business = require('../models/Business');
-const upload = require('../upload');// Middleware de subida de archivos
+const upload = require('../upload');// Middleware de subida de archivos}
+const multer = require('multer')
 
 // Configuración de multer para almacenar los archivos en una carpeta local llamada 'uploads'
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, './uploads/');
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
-const upload = multer({ storage });
+const uploads = multer({ storage });
 
 // Crear un nuevo negocio
-router.post('/create', upload.single('logo'), async (req, res) => {
-  try {
-    const { name, description } = req.body;
-    const logo = req.file ? req.file.path : null;
+router.post('/create', uploads.single('logo'), async (req, res) => {
+  try {   
+    console.log("Datos recibidos en el backend:", req.body);
+    console.log("Archivo recibido:", req.file);    
 
-    const newBusiness = new Business({ name, description, logo });
-    await newBusiness.save();
+    if (!req.body.name || !req.body.address || !req.body.phone || !req.body.email) {
+      return res.status(400).json({ message: "Faltan campos obligatorios." });
+    }
 
-    res.status(201).json({ message: 'Negocio creado con éxito', business: newBusiness });
+    const businessData = {
+      name: req.body.name,
+      description: req.body.description,
+      address: req.body.address,
+      phone: req.body.phone,
+      email: req.body.email,
+      website: req.body.website || '',
+      logo: req.file ? req.file.filename : null, // Guardar el nombre del archivo si se subió
+    };
+
+    const business = new Business(businessData);
+    await business.save();
+      
+    res.status(201).json({ message: 'Negocio creado con éxito', business});
   } catch (error) {
+    console.error('Error al crear el negocio:', error); // Ver el error específico
     res.status(500).json({ message: 'Error al crear el negocio', error: error.message });
   }
 });
@@ -32,15 +48,20 @@ router.post('/create', upload.single('logo'), async (req, res) => {
 module.exports = router;
   // Obtener todos los negocios
 router.get('/search', async (req, res) => {
-  const { name } = req.query;
+  const { query } = req.query;
+  console.log("Consulta de busqueda recibida", query);
     try {
+      if (!query) {
+        return res.status(400).json({ message: "El término de búsqueda no puede estar vacío" });
+      }
       const businesses = await Business.find(
         {
-          name: { $regex: name, $options: 'i' }, // Búsqueda insensible a mayúsculas y minúsculas
+          name: { $regex: query, $options: 'i' }, // Búsqueda insensible a mayúsculas y minúsculas
         }
       );
       res.json(businesses);
     } catch (err) {
+      console.error("Error en la búsqueda:", err);
       res.status(500).json({ message: err.message });
     }
   });

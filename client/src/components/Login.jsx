@@ -1,42 +1,30 @@
-import React from 'react';
+import React,  { useContext } from 'react';
+import { AuthContext } from "../context/AuthContext";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../firebase";
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 const Login = () => {
-  const handleLogin = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const idToken = await result.user.getIdToken();  // Obtener el token JWT del usuario
-      const user = result.user;
-      console.log('Usuario autenticado:', user);
-      console.log('ID Token:', idToken);  // Verifica que el token esté correctamente generado
 
-      // Enviar el token al backend
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${idToken}`,  // Aquí va el token en el header
-          'Content-Type': 'application/json',
-        }
-      });
-  
-      const data = await response.json();
-      window.location.href = '/';
-      console.log('Respuesta del backend: ', data);
-  
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-    }
-  };
-  
+const { setUser } = useContext(AuthContext);
 
-  return (
-    <div className="container text-center mt-5">
-      <button onClick={handleLogin} className="btn btn-primary mt-3">
-        Acceder con Google
-      </button>
-    </div>
-  );
+const handleLogin = async () => {
+  const provider = new GoogleAuthProvider();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    setUser(result.user); // Guardar el usuario en el contexto
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error);
+  }
 };
+
+return (
+  <div className="container mt-5">
+    <h2>Iniciar sesión</h2>
+    <button className="btn btn-primary" onClick={handleLogin}>
+      Acceder con Google
+    </button>
+  </div>
+);
+};
+
 export default Login;
