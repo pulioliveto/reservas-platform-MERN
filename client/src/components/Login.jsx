@@ -2,16 +2,19 @@ import React,  { useContext } from 'react';
 import { AuthContext } from "../context/AuthContext";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../firebase";
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
 const { setUser } = useContext(AuthContext);
+const navigate = useNavigate();
 
 const handleLogin = async () => {
   const provider = new GoogleAuthProvider();
   try {
     const result = await signInWithPopup(auth, provider);
-    setUser(result.user); // Guardar el usuario en el contexto
+    setUser(result.user);
+    navigate('/'); // Guardar el usuario en el contexto
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
   }

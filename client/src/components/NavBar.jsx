@@ -6,7 +6,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar navbar-light bg-light">
-      <a className="navbar-brand" href="/">Mi App</a>
+      <a className="navbar-brand" href="/">Reservá tu Turno</a>
       <div className="ml-auto">
         {user ? (
           <div className="d-flex align-items-center">

@@ -5,58 +5,72 @@ import { createBusiness } from '../services/apiBusiness';
 import { AuthContext } from "../context/AuthContext";
 import NeedLoginAlert from "../components/NeedLoginAlert";
 
+
 const CrearNegocio = () => {
-  const { user } = useContext(AuthContext);
-
-  if (!user) {
-    return <NeedLoginAlert />;
-  }
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    address: '',
-    phone: '',
-    email: '',
-    website: '',
-    logo: null
-  });
-  const [message, setMessage] = useState('');
-
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value,
+    // Declarar todos los hooks al nivel superior
+    const { user } = useContext(AuthContext);
+    const [formData, setFormData] = useState({
+      name: '',
+      description: '',
+      address: '',
+      phone: '',
+      email: '',
+      website: '',
+      logo: null,
     });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-  if (!formData.name || !formData.address || !formData.phone || !formData.email) {
-    alert("Por favor, completa todos los campos obligatorios.");
-    return;
-  }
-
-  // Construir FormData
-  const data = new FormData();
-  for (const key in formData) {
-    data.append(key, formData[key]);
-  }
-
-  // Loguear los datos enviados
-  console.log("Datos enviados al backend:", Array.from(data.entries()));
-
-  try {
-    await createBusiness(formData);
-    setMessage('Negocio creado correctamente');
-    setFormData({ name: '', description: '', address: '', phone: '', email: '', website: '', logo: null });
-  } catch (error) {
-    console.error('Error al crear el negocio:', error);
-    setMessage('Error al crear el negocio');
-  }
-};
-
+    const [message, setMessage] = useState('');
+  
+    // Si el usuario no está logueado, renderizar el componente de alerta
+    if (!user) {
+      return <NeedLoginAlert />;
+    }
+  
+    // Función para manejar cambios en los inputs del formulario
+    const handleChange = (e) => {
+      const { name, value, files } = e.target;
+      setFormData({
+        ...formData,
+        [name]: files ? files[0] : value,
+      });
+    };
+  
+    // Función para manejar el envío del formulario
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+  
+      // Validar campos obligatorios
+      if (!formData.name || !formData.address || !formData.phone || !formData.email) {
+        alert('Por favor, completa todos los campos obligatorios.');
+        return;
+      }
+  
+      // Construir FormData para enviar al backend
+      const data = new FormData();
+      for (const key in formData) {
+        data.append(key, formData[key]);
+      }
+  
+      // Loguear los datos enviados
+      console.log('Datos enviados al backend:', Array.from(data.entries()));
+  
+      try {
+        await createBusiness(data); // Asegúrate de enviar `data` como FormData
+        setMessage('Negocio creado correctamente');
+        setFormData({
+          name: '',
+          description: '',
+          address: '',
+          phone: '',
+          email: '',
+          website: '',
+          logo: null,
+        });
+      } catch (error) {
+        console.error('Error al crear el negocio:', error);
+        setMessage('Error al crear el negocio');
+      }
+    };
+  
   return (
     <div className="container mt-5">
       <h2>Crear Negocio</h2>
