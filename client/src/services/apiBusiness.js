@@ -60,3 +60,18 @@ export const deleteBusiness = async (id, token) => {
       throw error;
     }
   };
+
+  export const getUserBusinesses = async () => {
+    const response = await fetch(`http://localhost:5000/api/businesses/user`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Asegúrate de enviar el token
+      },
+    });
+  
+    if (!response.ok) {
+      throw new Error('Error al obtener los negocios');
+    }
+  
+    return await response.json();
+  };

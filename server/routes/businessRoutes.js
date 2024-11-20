@@ -3,6 +3,7 @@ const router = express.Router();
 const Business = require('../models/Business');
 const upload = require('../upload');// Middleware de subida de archivos}
 const multer = require('multer')
+const { auth } = require('../middleware/firebaseAuth');
 
 // Configuración de multer para almacenar los archivos en una carpeta local llamada 'uploads'
 const storage = multer.diskStorage({
@@ -14,6 +15,8 @@ const storage = multer.diskStorage({
   }
 });
 const uploads = multer({ storage });
+
+
 
 // Crear un nuevo negocio
 router.post('/create', uploads.single('logo'), async (req, res) => {
@@ -45,6 +48,8 @@ router.post('/create', uploads.single('logo'), async (req, res) => {
   }
 });
 
+
+
 module.exports = router;
   // Obtener todos los negocios
 router.get('/search', async (req, res) => {
@@ -65,6 +70,21 @@ router.get('/search', async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   });
+
+  router.get('/user', auth, async (req, res) => {
+    try {
+      console.log('Usuario autenticado en /user:', req.user);
+  
+      const businesses = await Business.find({ createdBy: req.user.uid });
+      console.log('Negocios encontrados:', businesses);
+  
+      res.json(businesses);
+    } catch (error) {
+      console.error('Error al obtener los negocios del usuario:', error);
+      res.status(500).json({ message: 'Error al obtener los negocios' });
+    }
+  });
+  
   
 
   // Obtener un negocio por ID

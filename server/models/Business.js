@@ -30,7 +30,10 @@ const businessSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  createdBy: 
+  { type: String,
+    required: true }, // Vincula al usuario
 });
 
 const Business = mongoose.model('Business', businessSchema);
