@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { createBusiness } from '../services/apiBusiness';
 import { AuthContext } from "../context/AuthContext";
 import NeedLoginAlert from "../components/NeedLoginAlert";
+import { getAuth } from 'firebase/auth';
 
 
 const CrearNegocio = () => {
@@ -37,10 +38,13 @@ const CrearNegocio = () => {
     // Función para manejar el envío del formulario
     const handleSubmit = async (e) => {
       e.preventDefault();
-  
+      const auth = getAuth();
+      const token = await auth.currentUser.getIdToken(true);
+      console.log("Nuevo token generado:", token);
+    
       // Validar campos obligatorios
       if (!formData.name || !formData.address || !formData.phone || !formData.email) {
-        alert('Por favor, completa todos los campos obligatorios.');
+        alert("Por favor, completa todos los campos obligatorios.");
         return;
       }
   
@@ -54,7 +58,7 @@ const CrearNegocio = () => {
       console.log('Datos enviados al backend:', Array.from(data.entries()));
   
       try {
-        await createBusiness(data); // Asegúrate de enviar `data` como FormData
+        await createBusiness(formData,token); // Asegúrate de enviar `data` como FormData
         setMessage('Negocio creado correctamente');
         setFormData({
           name: '',

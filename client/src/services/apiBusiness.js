@@ -1,25 +1,39 @@
 const API_URL = "http://localhost:5000/api"; // Ajusta si es necesario
 
 // Crear negocio
-export const createBusiness = async (formData, token) => {
-
-  const data = new FormData();
-  for (const key in formData) {
-    data.append(key, formData[key]);
+export const createBusiness = async (data, token) => {
+  const formData = new FormData();
+  formData.append('name', data.name);
+  formData.append('description', data.description);
+  formData.append('address', data.address);
+  formData.append('phone', data.phone);
+  formData.append('email', data.email);
+  if (data.logo) {
+    formData.append('logo', data.logo); // Asegúrate de pasar un archivo
   }
+  formData.append('website', data.website); 
+try{
 
-    const response = await fetch("http://localhost:5000/api/businesses/create", {
-      method: 'POST',
-      body: data
-    });
+  console.log('Datos enviados:', { token, formData });
+
+  const response = await fetch(`${API_URL}/businesses/create`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`, // Incluye el token de autenticación
+    },
+    body: formData,
+  });
 
   if (!response.ok) {
-    const errorResponse = await response.json();
-    throw new Error(errorResponse.message || 'Error al crear el negocio');
+    const errorData = await response.json();
+    throw new Error(errorData.message);
   }
 
-    return response.json();
- 
+  return response.json();
+} catch(error){
+  console.error('Error en createBusiness:', error.message);
+    throw error;
+}
 };
 
 // Editar negocio
@@ -61,17 +75,24 @@ export const deleteBusiness = async (id, token) => {
     }
   };
 
-  export const getUserBusinesses = async () => {
-    const response = await fetch(`http://localhost:5000/api/businesses/user`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Asegúrate de enviar el token
-      },
-    });
+  export const getUserBusinesses = async (token) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/businesses/user', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`, // Incluye el token
+        },
+      });
   
-    if (!response.ok) {
-      throw new Error('Error al obtener los negocios');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al obtener los negocios');
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error('Error en getUserBusinesses:', error);
+      throw error;
     }
-  
-    return await response.json();
   };
+  

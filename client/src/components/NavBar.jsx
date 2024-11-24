@@ -24,7 +24,7 @@ const Navbar = () => {
               alt="Foto de perfil"
               className="rounded-circle"
               onClick={handleLogoClick}
-              style={{ width: "40px", height: "40px", marginRight: "10px" }}
+              style={{ width: "40px", height: "40px", marginRight: "10px", cursor:"pointer" }}
             />
             <button className="btn btn-danger" onClick={logout}>
               Desconectarse

@@ -6,13 +6,26 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Para indicar cuándo está cargando el estado de autenticación
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      setLoading(false); // Finaliza el estado de carga
     });
     return () => unsubscribe();
   }, []);
+
+  // Función para obtener el ID token actual del usuario
+  const getToken = async () => {
+    if (!user) return null;
+    try {
+      return await user.getIdToken(true); // Fuerza la renovación del token si es necesario
+    } catch (error) {
+      console.error("Error al obtener el token:", error);
+      return null;
+    }
+  };
 
   const logout = async () => {
     try {
@@ -24,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout }}>
+    <AuthContext.Provider value={{ user, setUser, logout, getToken, loading }}>
       {children}
     </AuthContext.Provider>
   );
