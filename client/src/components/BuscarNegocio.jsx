@@ -1,45 +1,75 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import BackButton from '../components/BackButton';
 
 const BuscarNegocio = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
-
     if (!query.trim()) {
       alert("Por favor ingresa un término de búsqueda");
       return;
     }
-    
-    console.log("Ejecutando búsqueda..."); // Verificar que se ejecute
+
     try {
       const response = await fetch(`http://localhost:5000/api/businesses/search?query=${query}`);
       if (!response.ok) {
         throw new Error('Error en la búsqueda');
       }
       const data = await response.json();
-      console.log("Datos recibidos:", data); 
       setResults(data);
     } catch (error) {
       console.error('Error al buscar negocios:', error);
     }
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const handleSelectBusiness = (id) => {
+    navigate(`/negocio/${id}`);
+  };
+
   return (
     <div className="container mt-5">
+      <BackButton />
       <h2>Buscar Negocio</h2>
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        onKeyPress={handleKeyPress}
         placeholder="Buscar negocios..."
         className="form-control"
       />
       <button onClick={handleSearch} className="btn btn-primary mt-3">Buscar</button>
       <ul className="list-group mt-3">
         {results.map((business) => (
-          <li key={business._id} className="list-group-item">
-            {business.name} 
+          <li
+            key={business._id}
+            className="list-group-item d-flex justify-content-between align-items-center"
+            style={{ cursor: 'pointer' }}
+            onClick={() => handleSelectBusiness(business._id)}
+          >
+            <div className="d-flex align-items-center">
+              {business.logo && (
+                <img
+                  src={`http://localhost:5000/uploads/${business.logo.replace("\\", "/")}`}
+                  alt={`${business.name} logo`}
+                  style={{ width: '50px', height: '50px', marginRight: '10px' }}
+                />
+              )}
+              <div>
+                <h5 className="mb-1">{business.name}</h5>
+                <p className="mb-0 text-muted">{business.description}</p>
+              </div>
+            </div>
+            <i className="bi bi-arrow-right"></i>
           </li>
         ))}
       </ul>
@@ -48,4 +78,3 @@ const BuscarNegocio = () => {
 };
 
 export default BuscarNegocio;
-  

@@ -8,11 +8,17 @@ const authRoutes = require('./routes/auth');
 const passport = require('passport');
 const session = require('express-session');
 require('./config/passport-setup');
+const path = require("path");
+const multer = require('multer');
 const admin = require('firebase-admin');
 
 const app = express();
 
 dotenv.config()
+
+// Sirve la carpeta "uploads" para acceso público
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 app.use(express.json());
 console.log('Mongo URI:', process.env.MONGO_URI);

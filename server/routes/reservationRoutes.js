@@ -1,27 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Reservation = require('../models/Reservation');
+const { createReservation, getUserReservations } = require('../controllers/reservationControllers');
 
 // Crear una nueva reserva
-router.post('/', async (req, res) => {
-  try {
-    const reservation = new Reservation(req.body);
-    await reservation.save();
-    res.status(201).json(reservation);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+router.post('/create', createReservation);
 
-// Obtener todas las reservas de un negocio
-router.get('/business/:businessId', async (req, res) => {
-    try {
-      const reservations = await Reservation.find({ business: req.params.businessId });
-      res.json(reservations);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  });
+// Obtener todas las reservas de un usuario
+router.get('/user', getUserReservations);
 
   // Obtener una reserva por ID
 router.get('/:id', async (req, res) => {

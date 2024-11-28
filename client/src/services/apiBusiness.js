@@ -36,25 +36,44 @@ try{
 }
 };
 
-// Editar negocio
-export const updateBusiness = async (id, updatedData, token) => {
-    try {
-      const response = await fetch(`${API_URL}/businesses/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(updatedData)
-      });
-  
-      if (!response.ok) throw new Error('Error al actualizar el negocio');
-      return await response.json();
-    } catch (error) {
-      console.error("Error en updateBusiness:", error);
-      throw error;
+//EDitar negocios
+
+export const updateBusiness = async (id, data, token) => {
+  if (!token) {
+    throw new Error("No estás autenticado");
+  }
+
+  const formData = new FormData();
+  formData.append("name", data.name);
+  formData.append("description", data.description);
+  formData.append("address", data.address);
+  formData.append("phone", data.phone);
+  formData.append("email", data.email);
+  if (data.logo) {
+    formData.append("logo", data.logo); // Asegúrate de pasar un archivo
+  }
+  formData.append("website", data.website);
+
+  try {
+    const response = await fetch(`${API_URL}/businesses/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`, // Incluye el token de autenticación
+      },
+      body: formData, // Envía el FormData directamente
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error al actualizar el negocio");
     }
-  };
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error al actualizar el negocio:", error);
+    throw error;
+  }
+};
 
 
   // Eliminar negocio
@@ -75,6 +94,7 @@ export const deleteBusiness = async (id, token) => {
     }
   };
 
+  //Obtener negocios creados por un usuario en /tu-perfil
   export const getUserBusinesses = async (token) => {
     try {
       const response = await fetch('http://localhost:5000/api/businesses/user', {
@@ -96,3 +116,21 @@ export const deleteBusiness = async (id, token) => {
     }
   };
   
+  //Obtiene datos de un negocio especifico
+  export const getBusinessById = async (id, token) => {
+    try {
+      const response = await fetch(`${API_URL}/businesses/${id}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token})}`,
+        },
+      });
+  
+      if (!response.ok) throw new Error('Error al obtener el negocio');
+  
+      return await response.json();
+    } catch (error) {
+      console.error('Error en getBusinessById:', error);
+      throw error;
+    }
+  };

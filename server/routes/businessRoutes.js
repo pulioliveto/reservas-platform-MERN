@@ -3,8 +3,10 @@ const router = express.Router();
 const Business = require('../models/Business');
 const upload = require('../upload');// Middleware de subida de archivos}
 const multer = require('multer')
+const path = require("path");
 const { auth } = require('../middleware/firebaseAuth');
-
+const { getUserBusinesses, updateBusiness } = require('../controllers/businessControllers');
+ 
 // Configuración de multer para almacenar los archivos en una carpeta local llamada 'uploads'
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -14,36 +16,48 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
-const uploads = multer({ storage });
 
+
+const fileFilter = (req, file, cb) => {
+  const allowedExtensions = /jpeg|jpg|png|gif/;
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (allowedExtensions.test(ext)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Solo se permiten archivos de imagen"));
+  }
+};
+
+const uploads = multer({ storage, fileFilter  });
 
 
 // Crear un nuevo negocio
-router.post('/create', uploads.single('logo'), async (req, res) => {
-  try {   
-    console.log("Datos recibidos en el backend:", req.body);
-    console.log("Archivo recibido:", req.file);    
+router.post('/create', auth, uploads.single('logo'), async (req, res) => {
+  try {
+    const { name, description, address, phone, email, website } = req.body;
 
-    if (!req.body.name || !req.body.address || !req.body.phone || !req.body.email) {
-      return res.status(400).json({ message: "Faltan campos obligatorios." });
+    // Validar campos obligatorios
+    if (!name || !address || !phone || !email) {
+      return res.status(400).json({ message: 'Faltan campos obligatorios.' });
     }
 
     const businessData = {
-      name: req.body.name,
-      description: req.body.description,
-      address: req.body.address,
-      phone: req.body.phone,
-      email: req.body.email,
-      website: req.body.website || '',
-      logo: req.file ? req.file.filename : null, // Guardar el nombre del archivo si se subió
+      name,
+      description,
+      address,
+      phone,
+      email,
+      website: website || '',
+      logo: req.file ? req.file.filename : null, // Guardar solo el nombre del archivo
+      createdBy: req.user.uid,
     };
 
     const business = new Business(businessData);
     await business.save();
-      
-    res.status(201).json({ message: 'Negocio creado con éxito', business});
+
+    res.status(201).json({ message: 'Negocio creado con éxito', business });
   } catch (error) {
-    console.error('Error al crear el negocio:', error); // Ver el error específico
+    console.error('Error al crear el negocio:', error);
     res.status(500).json({ message: 'Error al crear el negocio', error: error.message });
   }
 });
@@ -88,26 +102,49 @@ router.get('/search', async (req, res) => {
   
 
   // Obtener un negocio por ID
-router.get('/:id', async (req, res) => {
+  router.get('/:id', async (req, res) => {
     try {
       const business = await Business.findById(req.params.id);
-      if (!business) return res.status(404).json({ message: 'Business not found' });
-      res.json(business);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+      if (!business) {
+        return res.status(404).json({ message: 'Negocio no encontrado' });
+      }
+      res.status(200).json(business);
+    } catch (error) {
+      console.error('Error al obtener el negocio:', error);
+      res.status(500).json({ message: 'Error al obtener el negocio' });
     }
   });
 
-  // Actualizar un negocio
-router.put('/:id', async (req, res) => {
-    try {
-      const business = await Business.findByIdAndUpdate(req.params.id, req.body, { new: true });
-      if (!business) return res.status(404).json({ message: 'Business not found' });
-      res.json(business);
-    } catch (err) {
-      res.status(400).json({ message: err.message });
+  // Ruta para actualizar un negocio
+router.put('/:id', auth, uploads.single('logo'), async (req, res) => {
+  const { id } = req.params;
+  const { name, description, address, phone, email, website } = req.body;
+
+  const updatedData = {
+    name,
+    description,
+    address,
+    phone,
+    email,
+    website,
+    logo: req.file ? req.file.filename : undefined, // Guardar solo el nombre del archivo
+  };
+
+  try {
+    const updatedBusiness = await Business.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
+
+    if (!updatedBusiness) {
+      return res.status(404).json({ message: "Negocio no encontrado" });
     }
-  });
+
+    res.status(200).json(updatedBusiness);
+  } catch (error) {
+    console.error("Error al actualizar el negocio:", error);
+    res.status(500).json({ message: "Error al actualizar el negocio" });
+  }
+});
 
   // Eliminar un negocio
 router.delete('/:id', async (req, res) => {
@@ -120,4 +157,10 @@ router.delete('/:id', async (req, res) => {
     }
   });
   
+
+
+// Ruta para obtener los negocios del usuario autenticado
+router.get('/businesses/user', auth, getUserBusinesses);
+
+
   module.exports = router;

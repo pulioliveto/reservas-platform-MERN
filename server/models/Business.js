@@ -25,6 +25,7 @@ const businessSchema = new mongoose.Schema({
   logo: { 
     type: String,
     required:false,
+    default: null
 
   },
   createdAt: {

@@ -1,82 +1,75 @@
-import React, { useState } from 'react';
-import { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createBusiness } from '../services/apiBusiness';
 import { AuthContext } from "../context/AuthContext";
 import NeedLoginAlert from "../components/NeedLoginAlert";
 import { getAuth } from 'firebase/auth';
-
+import BackButton from '../components/BackButton';
 
 const CrearNegocio = () => {
-    // Declarar todos los hooks al nivel superior
-    const { user } = useContext(AuthContext);
-    const [formData, setFormData] = useState({
-      name: '',
-      description: '',
-      address: '',
-      phone: '',
-      email: '',
-      website: '',
-      logo: null,
+  const { user } = useContext(AuthContext);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    address: '',
+    phone: '',
+    email: '',
+    website: '',
+    logo: null,
+  });
+  const [message, setMessage] = useState('');
+
+  if (!user) {
+    return <NeedLoginAlert />;
+  }
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData({
+      ...formData,
+      [name]: files ? files[0] : value,
     });
-    const [message, setMessage] = useState('');
-  
-    // Si el usuario no está logueado, renderizar el componente de alerta
-    if (!user) {
-      return <NeedLoginAlert />;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const auth = getAuth();
+    const token = await auth.currentUser.getIdToken(true);
+    console.log("Nuevo token generado:", token);
+
+    if (!formData.name || !formData.address || !formData.phone || !formData.email) {
+      alert("Por favor, completa todos los campos obligatorios.");
+      return;
     }
-  
-    // Función para manejar cambios en los inputs del formulario
-    const handleChange = (e) => {
-      const { name, value, files } = e.target;
+
+    const data = new FormData();
+    for (const key in formData) {
+      data.append(key, formData[key]);
+    }
+
+    console.log('Datos enviados al backend:', Array.from(data.entries()));
+
+    try {
+      await createBusiness(formData, token);
+      setMessage('Negocio creado correctamente');
       setFormData({
-        ...formData,
-        [name]: files ? files[0] : value,
+        name: '',
+        description: '',
+        address: '',
+        phone: '',
+        email: '',
+        website: '',
+        logo: null,
       });
-    };
-  
-    // Función para manejar el envío del formulario
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      const auth = getAuth();
-      const token = await auth.currentUser.getIdToken(true);
-      console.log("Nuevo token generado:", token);
-    
-      // Validar campos obligatorios
-      if (!formData.name || !formData.address || !formData.phone || !formData.email) {
-        alert("Por favor, completa todos los campos obligatorios.");
-        return;
-      }
-  
-      // Construir FormData para enviar al backend
-      const data = new FormData();
-      for (const key in formData) {
-        data.append(key, formData[key]);
-      }
-  
-      // Loguear los datos enviados
-      console.log('Datos enviados al backend:', Array.from(data.entries()));
-  
-      try {
-        await createBusiness(formData,token); // Asegúrate de enviar `data` como FormData
-        setMessage('Negocio creado correctamente');
-        setFormData({
-          name: '',
-          description: '',
-          address: '',
-          phone: '',
-          email: '',
-          website: '',
-          logo: null,
-        });
-      } catch (error) {
-        console.error('Error al crear el negocio:', error);
-        setMessage('Error al crear el negocio');
-      }
-    };
-  
+    } catch (error) {
+      console.error('Error al crear el negocio:', error);
+      setMessage('Error al crear el negocio');
+    }
+  };
+
   return (
     <div className="container mt-5">
+      <BackButton />
       <h2>Crear Negocio</h2>
       {message && <div className="alert alert-info">{message}</div>}
       <form onSubmit={handleSubmit}>
@@ -89,6 +82,7 @@ const CrearNegocio = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
+            placeholder="Mi Tienda"
             required
           />
         </div>
@@ -101,6 +95,7 @@ const CrearNegocio = () => {
             name="description"
             value={formData.description}
             onChange={handleChange}
+            placeholder="Tienda de ropa"
             required
           />
         </div>
@@ -113,6 +108,7 @@ const CrearNegocio = () => {
             name="address"
             value={formData.address}
             onChange={handleChange}
+            placeholder="Calle Falsa 123"
             required
           />
         </div>
@@ -125,6 +121,7 @@ const CrearNegocio = () => {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
+            placeholder="+34 123 456 789"
             required
           />
         </div>
@@ -137,6 +134,7 @@ const CrearNegocio = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            placeholder="contacto@mitienda.com"
             required
           />
         </div>
@@ -149,6 +147,7 @@ const CrearNegocio = () => {
             name="website"
             value={formData.website}
             onChange={handleChange}
+            placeholder="www.mitienda.com"
           />
         </div>
         <div className="mb-3">
@@ -168,15 +167,3 @@ const CrearNegocio = () => {
 };
 
 export default CrearNegocio;
-
-
-// Explicación de la Lógica:
-//Estado (useState): Se define formData para almacenar cada campo del formulario, incluyendo el logo.
-
-//Manejo de Archivos (handleFileChange): Se utiliza para capturar el archivo subido y guardarlo en el estado.
-
-//Envío de Formulario (handleSubmit): Al enviar el formulario, se crea un objeto FormData que contiene los datos para enviar al backend, incluyendo el archivo de logo.
-
-//Estilos con Bootstrap: La estructura utiliza clases de Bootstrap para mejorar el diseño y la disposición del formulario.
-
-// Con este componente CrearNegocio, el usuario podrá añadir todos los datos necesarios, y opcionalmente, un logo.

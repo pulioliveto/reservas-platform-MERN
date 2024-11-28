@@ -49,14 +49,14 @@ const MainPage = () => {
                 className="btn btn-primary btn-lg py-3"
                 onClick={handleCreateBusiness}
               >
-                Tengo un negocio
+                <i className="bi bi-shop"></i> Tengo un negocio
               </Link>
               {!isAuthenticated && <NeedLoginAlert />}
               <Link 
                 to="/reservar-turno" 
                 className="btn btn-outline-secondary btn-lg py-3"
               >
-                Quiero reservar un turno
+                <i className="bi bi-calendar-check"></i> Quiero reservar un turno
               </Link>
             </div>
           </Card.Body>
