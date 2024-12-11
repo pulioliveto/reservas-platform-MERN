@@ -34,6 +34,8 @@ const updateBusiness = async (req, res) => {
     }
   };  
 
+  
+
 module.exports = {
-  getUserBusinesses,updateBusiness
+  getUserBusinesses,updateBusiness,
 };

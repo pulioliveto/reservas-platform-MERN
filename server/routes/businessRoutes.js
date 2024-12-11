@@ -5,7 +5,7 @@ const upload = require('../upload');// Middleware de subida de archivos}
 const multer = require('multer')
 const path = require("path");
 const { auth } = require('../middleware/firebaseAuth');
-const { getUserBusinesses, updateBusiness } = require('../controllers/businessControllers');
+const { getUserBusinesses, updateBusiness} = require('../controllers/businessControllers');
  
 // Configuración de multer para almacenar los archivos en una carpeta local llamada 'uploads'
 const storage = multer.diskStorage({
@@ -31,16 +31,37 @@ const fileFilter = (req, file, cb) => {
 const uploads = multer({ storage, fileFilter  });
 
 
-// Crear un nuevo negocio
+// Ruta para crear un nuevo negocio
 router.post('/create', auth, uploads.single('logo'), async (req, res) => {
   try {
-    const { name, description, address, phone, email, website } = req.body;
+    console.log('Datos recibidos en el backend:', req.body);
+
+    const { name, description, address, phone, email, website, schedule } = req.body;
 
     // Validar campos obligatorios
     if (!name || !address || !phone || !email) {
       return res.status(400).json({ message: 'Faltan campos obligatorios.' });
     }
 
+    // Parsear y validar el campo schedule
+    let parsedSchedule;
+    try {
+      parsedSchedule = typeof schedule === 'string' ? JSON.parse(schedule) : schedule;
+
+      // Verificar que el resultado sea un array
+      if (!Array.isArray(parsedSchedule)) {
+        throw new Error('El campo schedule debe ser un array de objetos.');
+      }
+    } catch (error) {
+      return res.status(400).json({ message: 'Formato de schedule inválido', error: error.message });
+    }
+
+    // Validar que el schedule tenga al menos un día definido
+    if (!parsedSchedule || parsedSchedule.length === 0) {
+      return res.status(400).json({ message: 'Debe proporcionar horarios para el negocio.' });
+    }
+
+    // Construir los datos del negocio
     const businessData = {
       name,
       description,
@@ -49,9 +70,11 @@ router.post('/create', auth, uploads.single('logo'), async (req, res) => {
       email,
       website: website || '',
       logo: req.file ? req.file.filename : null, // Guardar solo el nombre del archivo
-      createdBy: req.user.uid,
+      schedule: parsedSchedule, // Usar el schedule parseado
+      createdBy: req.user.uid, // ID del usuario que creó el negocio
     };
 
+    // Crear y guardar el negocio en la base de datos
     const business = new Business(businessData);
     await business.save();
 

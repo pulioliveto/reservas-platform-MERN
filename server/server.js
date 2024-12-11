@@ -11,6 +11,9 @@ require('./config/passport-setup');
 const path = require("path");
 const multer = require('multer');
 const admin = require('firebase-admin');
+const calendarRoutes = require('./routes/calendarRoutes');
+
+
 
 const app = express();
 
@@ -22,6 +25,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(express.json());
 console.log('Mongo URI:', process.env.MONGO_URI);
+
+app.use('/api/calendar', calendarRoutes);
 
 
 //Conexion a MONGODB.
@@ -64,5 +69,9 @@ app.use('/api/reservations', reservationRoutes);
 
 //Ruta para login con Auth 
 app.use('/api/auth', authRoutes);
+
+// Usar las rutas de Google Calendar
+app.use('/api', calendarRoutes);
+
 
 app.get('/', (req, res) => { res.send('¡Bienvenido a la plataforma de reservas!'); });

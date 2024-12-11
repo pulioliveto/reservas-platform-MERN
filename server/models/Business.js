@@ -32,6 +32,18 @@ const businessSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  schedule: [
+    {
+      day: { type: String, required: true },  // Ejemplo: "Lunes"
+      intervals: [
+        {
+          startTime: { type: String, required: true }, // Ejemplo: "09:00"
+          endTime: { type: String, required: true },   // Ejemplo: "13:00"
+        },
+      ],
+    },
+  ],
+  
   createdBy: 
   { type: String,
     required: true }, // Vincula al usuario
