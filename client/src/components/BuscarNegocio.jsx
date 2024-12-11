@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../components/BackButton';
 
@@ -7,14 +7,15 @@ const BuscarNegocio = () => {
   const [results, setResults] = useState([]);
   const navigate = useNavigate();
 
-  const handleSearch = async () => {
-    if (!query.trim()) {
-      alert("Por favor ingresa un término de búsqueda");
+  // Función para manejar la búsqueda
+  const searchBusinesses = async (searchQuery) => {
+    if (!searchQuery.trim()) {
+      setResults([]);
       return;
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/businesses/search?query=${query}`);
+      const response = await fetch(`http://localhost:5000/api/businesses/search?query=${searchQuery}`);
       if (!response.ok) {
         throw new Error('Error en la búsqueda');
       }
@@ -25,11 +26,14 @@ const BuscarNegocio = () => {
     }
   };
 
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      handleSearch();
-    }
-  };
+  // useEffect para manejar la búsqueda en tiempo real
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      searchBusinesses(query);
+    }, 300); // Espera 300ms después de que el usuario deja de escribir
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [query]);
 
   const handleSelectBusiness = (id) => {
     navigate(`/negocio/${id}`);
@@ -43,11 +47,9 @@ const BuscarNegocio = () => {
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        onKeyPress={handleKeyPress}
         placeholder="Buscar negocios..."
         className="form-control"
       />
-      <button onClick={handleSearch} className="btn btn-primary mt-3">Buscar</button>
       <ul className="list-group mt-3">
         {results.map((business) => (
           <li

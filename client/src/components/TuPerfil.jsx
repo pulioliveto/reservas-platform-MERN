@@ -66,9 +66,18 @@ const TuPerfil = () => {
                 style={{ cursor: 'pointer' }}
                 onClick={() => navigate(`/negocio/${business._id}`)}
               >
-                <div>
-                  <h5 className="card-title">{business.name}</h5>
-                  <p className="card-text">{business.description}</p>
+                <div className="d-flex align-items-center">
+                  {business.logo && (
+                    <img
+                      src={`http://localhost:5000/uploads/${business.logo.replace("\\", "/")}`}
+                      alt={`${business.name} logo`}
+                      style={{ width: '50px', height: '50px', marginRight: '10px' }}
+                    />
+                  )}
+                  <div>
+                    <h5 className="card-title">{business.name}</h5>
+                    <p className="card-text">{business.description}</p>
+                  </div>
                 </div>
                 <i className="bi bi-arrow-right"></i>
               </div>
