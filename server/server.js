@@ -65,7 +65,7 @@ app.use(passport.session());
 
 // Usar rutas API 
 app.use('/api/businesses', businessRoutes);
-app.use('/api/reservations', reservationRoutes);
+app.use('/api/turnos', reservationRoutes);
 
 //Ruta para login con Auth 
 app.use('/api/auth', authRoutes);
