@@ -15,6 +15,9 @@ import BuscarNegocio from './components/BuscarNegocio.jsx';
 import { AuthProvider } from "./context/AuthContext";
 import EditarNegocio from './components/EditarNegocio.jsx';
 import DetalleNegocio from './components/DetalleNegocio.jsx';
+import MisTurnos from './components/MisTurnos.jsx';
+
+
 
 
 function App() {
@@ -30,6 +33,7 @@ function App() {
         <Route path="/tu-perfil" element={<TuPerfil />} />
         <Route path="/editar-negocio/:id" element={<EditarNegocio />} />
         <Route path="/negocio/:id" element={<DetalleNegocio />} />
+        <Route path="/mis-turnos" element={<MisTurnos />} />
     </Routes>
     <ToastContainer />
   </Router>

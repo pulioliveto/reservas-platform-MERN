@@ -1,138 +1,192 @@
-import React, { useState } from "react";
-import { Table, Button, Form, Row, Col } from "react-bootstrap";
+import React from 'react';
+import { Button, Table, Form, Row, Col } from 'react-bootstrap';
+import { FaPlus, FaTimes } from 'react-icons/fa';
 
-const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+const DIAS_SEMANA = [
+  { id: 1, nombre: 'Lunes' },
+  { id: 2, nombre: 'Martes' },
+  { id: 3, nombre: 'Miércoles' },
+  { id: 4, nombre: 'Jueves' },
+  { id: 5, nombre: 'Viernes' },
+  { id: 6, nombre: 'Sábado' },
+  { id: 0, nombre: 'Domingo' }
+];
+
+const TimePicker10Min = ({ value, onChange, disabled }) => {
+  const hours = Array.from({ length: 24 }, (_, i) => i);
+  const minutes = ['00', '10', '20', '30', '40', '50'];
+
+  const handleHourChange = (e) => {
+    const newHour = e.target.value;
+    const [_, currentMin] = value.split(':');
+    onChange(`${newHour.padStart(2, '0')}:${currentMin || '00'}`);
+  };
+
+  const handleMinuteChange = (e) => {
+    const newMin = e.target.value;
+    const [currentHour] = value.split(':');
+    onChange(`${currentHour || '00'}:${newMin}`);
+  };
+
+  return (
+    <div className="d-flex align-items-center">
+      <Form.Select 
+        value={value ? value.split(':')[0] : ''}
+        onChange={handleHourChange}
+        disabled={disabled}
+        style={{ width: '70px' }}
+      >
+        <option value="">HH</option>
+        {hours.map(hour => (
+          <option key={hour} value={hour}>
+            {hour.toString().padStart(2, '0')}
+          </option>
+        ))}
+      </Form.Select>
+      <span className="mx-1">:</span>
+      <Form.Select
+        value={value ? value.split(':')[1] : ''}
+        onChange={handleMinuteChange}
+        disabled={disabled}
+        style={{ width: '70px' }}
+      >
+        <option value="">MM</option>
+        {minutes.map(minute => (
+          <option key={minute} value={minute}>
+            {minute}
+          </option>
+        ))}
+      </Form.Select>
+    </div>
+  );
+};
 
 const CalendarioTurno = ({ onScheduleChange }) => {
-  const [schedule, setSchedule] = useState(
-    daysOfWeek.map((day) => ({
-      day,
-      intervals: [{ startTime: "", endTime: "" }],
+  const [schedule, setSchedule] = React.useState(
+    DIAS_SEMANA.map(dia => ({
+      day: dia.id,
+      dayName: dia.nombre,
+      intervals: [{ startTime: '', endTime: '' }],
+      isOpen: false
     }))
   );
 
-  const handleInputChange = (dayIndex, intervalIndex, field, value) => {
+  const handleTimeChange = (dayIndex, intervalIndex, field, value) => {
     const updatedSchedule = [...schedule];
     updatedSchedule[dayIndex].intervals[intervalIndex][field] = value;
+    
+    // Eliminamos la validación automática que cambiaba el isOpen
     setSchedule(updatedSchedule);
-    onScheduleChange(updatedSchedule); // Enviar cambios al componente padre
+    onScheduleChange(updatedSchedule);
   };
 
   const addInterval = (dayIndex) => {
     const updatedSchedule = [...schedule];
-    updatedSchedule[dayIndex].intervals.push({ startTime: "", endTime: "" });
+    updatedSchedule[dayIndex].intervals.push({ startTime: '', endTime: '' });
     setSchedule(updatedSchedule);
+    onScheduleChange(updatedSchedule);
   };
 
   const removeInterval = (dayIndex, intervalIndex) => {
     const updatedSchedule = [...schedule];
     updatedSchedule[dayIndex].intervals.splice(intervalIndex, 1);
+    
+    if (updatedSchedule[dayIndex].intervals.length === 0) {
+      updatedSchedule[dayIndex].intervals = [{ startTime: '', endTime: '' }];
+    }
+    
     setSchedule(updatedSchedule);
     onScheduleChange(updatedSchedule);
   };
 
-  const clearSchedule = () => {
-    const resetSchedule = daysOfWeek.map((day) => ({
-      day,
-      intervals: [{ startTime: "", endTime: "" }],
-    }));
-    setSchedule(resetSchedule);
-    onScheduleChange(resetSchedule);
-  };
-
-
-  const generateTimeOptions = () => {
-    const times = [];
-    for (let hour = 0; hour < 24; hour++) {
-      for (let minute = 0; minute < 60; minute += 15) {
-        const formattedHour = hour.toString().padStart(2, "0");
-        const formattedMinute = minute.toString().padStart(2, "0");
-        times.push(`${formattedHour}:${formattedMinute}`);
-      }
+  const toggleDay = (dayIndex) => {
+    const updatedSchedule = [...schedule];
+    updatedSchedule[dayIndex].isOpen = !updatedSchedule[dayIndex].isOpen;
+    
+    if (!updatedSchedule[dayIndex].isOpen) {
+      // Limpiar intervalos al cerrar el día
+      updatedSchedule[dayIndex].intervals = [{ startTime: '', endTime: '' }];
     }
-    return times;
+    
+    setSchedule(updatedSchedule);
+    onScheduleChange(updatedSchedule);
   };
-  
-  const timeOptions = generateTimeOptions();
-  
+
   return (
-    <div>
-      <h5>Definir Disponibilidad Horaria</h5>
-      <Table bordered responsive className="text-center">
+    <div className="mt-4">
+      <h5>Configuración de Horarios</h5>
+      <p className="text-muted mb-3">
+        Activa los días que el negocio esté abierto y define sus horarios.
+        Los días desactivados se considerarán cerrados.
+      </p>
+      
+      <Table striped bordered responsive>
         <thead>
           <tr>
-            <th>Día</th>
-            <th>Intervalos de Horarios</th>
-            <th>Acciones</th>
+            <th style={{ width: '20%' }}>Día</th>
+            <th style={{ width: '60%' }}>Horario de Atención</th>
+            <th style={{ width: '20%' }}>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {schedule.map((daySchedule, dayIndex) => (
-            <tr key={daySchedule.day}>
-              <td>{daySchedule.day}</td>
+          {schedule.map((dia, dayIndex) => (
+            <tr key={dia.day}>
               <td>
-                {daySchedule.intervals.map((interval, intervalIndex) => (
-                  <div key={intervalIndex} className="d-flex align-items-center mb-2">
-                   <Form.Select
-  value={interval.startTime}
-  onChange={(e) =>
-    handleInputChange(dayIndex, intervalIndex, "startTime", e.target.value)
-  }
-  className="me-2"
->
-  {timeOptions.map((time) => (
-    <option key={time} value={time}>
-      {time}
-    </option>
-  ))}
-</Form.Select>
-<span>-</span>
-<Form.Select
-  value={interval.endTime}
-  onChange={(e) =>
-    handleInputChange(dayIndex, intervalIndex, "endTime", e.target.value)
-  }
-  className="ms-2"
->
-  {timeOptions.map((time) => (
-    <option key={time} value={time}>
-      {time}
-    </option>
-  ))}
-</Form.Select>
-                    {daySchedule.intervals.length > 1 && (
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        className="ms-3"
-                        onClick={() => removeInterval(dayIndex, intervalIndex)}
-                      >
-                        Eliminar
-                      </Button>
-                    )}
-                  </div>
+                <Form.Check
+                  type="switch"
+                  id={`day-${dia.day}-switch`}
+                  label={<strong>{dia.dayName}</strong>}
+                  checked={dia.isOpen}
+                  onChange={() => toggleDay(dayIndex)}
+                />
+              </td>
+              <td>
+                {dia.intervals.map((interval, intervalIndex) => (
+                  <Row key={intervalIndex} className="mb-2 g-2 align-items-center">
+                    <Col xs={5}>
+                      <TimePicker10Min
+                        value={interval.startTime}
+                        onChange={(newTime) => handleTimeChange(dayIndex, intervalIndex, 'startTime', newTime)}
+                        disabled={!dia.isOpen}
+                      />
+                    </Col>
+                    <Col xs={1} className="text-center">-</Col>
+                    <Col xs={5}>
+                      <TimePicker10Min
+                        value={interval.endTime}
+                        onChange={(newTime) => handleTimeChange(dayIndex, intervalIndex, 'endTime', newTime)}
+                        disabled={!dia.isOpen}
+                      />
+                    </Col>
+                    <Col xs={1}>
+                      {dia.intervals.length > 1 && (
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={() => removeInterval(dayIndex, intervalIndex)}
+                          disabled={!dia.isOpen}
+                        >
+                          <FaTimes />
+                        </Button>
+                      )}
+                    </Col>
+                  </Row>
                 ))}
               </td>
               <td>
                 <Button
-                  variant="primary"
+                  variant="outline-primary"
                   size="sm"
                   onClick={() => addInterval(dayIndex)}
+                  disabled={!dia.isOpen}
                 >
-                  Agregar Intervalo
+                  <FaPlus /> Agregar Turno
                 </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
-      <Row className="mt-3">
-        <Col>
-          <Button variant="secondary" onClick={clearSchedule} className="w-100">
-            Limpiar Horarios
-          </Button>
-        </Col>
-      </Row>
     </div>
   );
 };

@@ -1,14 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Container, Card, Form, Button, Row, Col, Alert, Image } from 'react-bootstrap';
 import { createBusiness } from '../services/apiBusiness';
 import { AuthContext } from "../context/AuthContext";
 import NeedLoginAlert from "../components/NeedLoginAlert";
-import { getAuth } from 'firebase/auth';
 import BackButton from '../components/BackButton';
 import { getAccessToken } from '../services/googleCalendarService';
 import { FaUpload } from 'react-icons/fa';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css'; // Asegúrate de importar el CSS de react-calendar.
 import CalendarioTurno from './CalendarioTurno';
 
 const CrearNegocio = () => {
@@ -25,6 +22,7 @@ const CrearNegocio = () => {
   });
   const [message, setMessage] = useState('');
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [scheduleError, setScheduleError] = useState('');
 
   if (!user) {
     return <NeedLoginAlert />;
@@ -53,25 +51,70 @@ const CrearNegocio = () => {
       ...prevFormData,
       schedule: newSchedule,
     }));
+    setScheduleError(''); // Limpia el error cuando se modifica el schedule
+  };
+
+  const validateSchedule = (schedule) => {
+    if (schedule.length === 0) {
+      return "Por favor, agrega los horarios para al menos un día de la semana.";
+    }
+
+    // Filtrar solo los días abiertos (isOpen: true)
+    const openDays = schedule.filter(day => day.isOpen);
+
+    // Verifica que al menos un día esté abierto y tenga horarios definidos
+    if (openDays.length === 0) {
+      return "El negocio debe tener horarios definidos para al menos un día de la semana.";
+    }
+
+    // Verifica que los días abiertos tengan intervalos válidos
+    const hasInvalidIntervals = openDays.some(day => {
+      if (day.intervals && day.intervals.length > 0) {
+        return day.intervals.some(interval => {
+          if (!interval.startTime || !interval.endTime) {
+            return true;
+          }
+          if (interval.startTime >= interval.endTime) {
+            return true;
+          }
+          return false;
+        });
+      }
+      // Si no hay intervalos en un día abierto, es inválido
+      return true;
+    });
+
+    if (hasInvalidIntervals) {
+      return "Por favor, completa correctamente los horarios para los días que el negocio está abierto (hora de inicio debe ser menor que hora de cierre).";
+    }
+
+    return '';
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = await getAccessToken();
-    
 
-      // Verifica que el schedule no esté vacío antes de enviarlo
-  if (formData.schedule.length === 0) {
-    alert("Por favor, agrega los horarios del negocio.");
-    return;
-  }
-
+    // Validación de campos obligatorios
     if (!formData.name || !formData.address || !formData.phone || !formData.email) {
       alert("Por favor, completa todos los campos obligatorios.");
       return;
     }
 
+    // Validación del schedule
+    const scheduleValidationError = validateSchedule(formData.schedule);
+    if (scheduleValidationError) {
+      setScheduleError(scheduleValidationError);
+      return;
+    }
+
     try {
+      console.log("Datos a enviar:", {
+        ...formData,
+        schedule: formData.schedule,
+        logo: formData.logo ? formData.logo.name : 'No logo'
+      });
+
       await createBusiness(formData, token);
       setMessage('Negocio creado correctamente');
       setFormData({
@@ -85,9 +128,10 @@ const CrearNegocio = () => {
         schedule: [],
       });
       setPreviewUrl(null);
+      setScheduleError('');
     } catch (error) {
       console.error('Error al crear el negocio:', error);
-      setMessage('Error al crear el negocio');
+      setMessage(error.message || 'Error al crear el negocio');
     }
   };
 
@@ -105,7 +149,6 @@ const CrearNegocio = () => {
               <Form onSubmit={handleSubmit}>
                 <Row>
                   <Col md={8}>
-                    {/* Campos del formulario */}
                     <Form.Group className="mb-3">
                       <Form.Control
                         type="text"
@@ -167,7 +210,6 @@ const CrearNegocio = () => {
                     </Form.Group>
                   </Col>
                   <Col md={4} className="text-center">
-                    {/* Subida de logo */}
                     <Form.Control
                       type="file"
                       name="logo"
@@ -198,7 +240,13 @@ const CrearNegocio = () => {
                   </Col>
                 </Row>
 
-              <CalendarioTurno onScheduleChange={handleScheduleChange} />
+                <CalendarioTurno onScheduleChange={handleScheduleChange} />
+                {scheduleError && <Alert variant="danger" className="mt-3">{scheduleError}</Alert>}
+                
+                <div className="mt-3 text-muted small">
+                  <p>Nota: Puedes dejar sin horarios los días que el negocio permanezca cerrado.</p>
+                </div>
+                
                 <Button type="submit" className="mt-4">
                   Crear Negocio
                 </Button>

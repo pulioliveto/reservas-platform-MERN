@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from '../img/logo.png';
-import '../css/MainPage.css'
+import '../css/MainPage.css';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -16,8 +16,8 @@ const Navbar = () => {
   }, [user, navigate, location.pathname]); // Ejecuta el efecto cuando cambia el estado del usuario o la ubicación
 
   const handleLogoToHome = () => {
-    window.location.href = "/"
-  }
+    window.location.href = "/";
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -53,6 +53,11 @@ const Navbar = () => {
                   <li>
                     <button className="dropdown-item" onClick={() => navigate('/tu-perfil')}>
                       <i className="bi bi-briefcase"></i> Mis negocios
+                    </button>
+                  </li>
+                  <li>
+                    <button className="dropdown-item" onClick={() => navigate('/mis-turnos')}>
+                      <i className="bi bi-calendar-check"></i> Mis turnos
                     </button>
                   </li>
                   <li>

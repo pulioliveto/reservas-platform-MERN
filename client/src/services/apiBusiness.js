@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api"; // Ajusta si es necesario
+const API_URL = "http://localhost:5000/api";
 
 // Crear negocio
 export const createBusiness = async (data, token) => {
@@ -13,18 +13,31 @@ export const createBusiness = async (data, token) => {
   formData.append('phone', data.phone);
   formData.append('email', data.email);
   if (data.logo) {
-    formData.append('logo', data.logo); // Asegúrate de pasar un archivo
+    formData.append('logo', data.logo);
   }
   formData.append('website', data.website);
-  formData.append('schedule', JSON.stringify(data.schedule)); // Convertir horarios a string
+
+  // Mapeo de número a nombre de día
+  const DIAS_SEMANA = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+
+  // Normalizar el schedule antes de enviar
+  const normalizedSchedule = data.schedule
+    .filter(day => day.isOpen) // Solo días abiertos
+    .map(day => ({
+      day: DIAS_SEMANA[day.day],
+      intervals: day.intervals.map(interval => ({
+        startTime: interval.startTime,
+        endTime: interval.endTime
+      }))
+    }));
+
+  formData.append('schedule', JSON.stringify(normalizedSchedule));
 
   try {
-    console.log('Datos enviados:', { token, formData });
-
     const response = await fetch(`${API_URL}/businesses/create`, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`, // Incluye el token de autenticación
+        Authorization: `Bearer ${token}`,
       },
       body: formData,
     });
@@ -36,13 +49,44 @@ export const createBusiness = async (data, token) => {
 
     return await response.json();
   } catch (error) {
-    console.error('Error en createBusiness:', error.message);
+    console.error('Error en createBusiness:', error);
     throw error;
   }
 };
 
-//EDitar negocios
+// Obtener negocio por ID
+export const getBusinessById = async (id, token) => {
+  try {
+    const response = await fetch(`${API_URL}/businesses/${id}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al obtener el negocio');
+    }
+
+    const businessData = await response.json();
+    
+    // Asegurar que el schedule tenga el formato correcto
+    if (businessData.schedule) {
+      businessData.schedule = businessData.schedule.map(day => ({
+        day: day.day,
+        intervals: day.intervals || []
+      }));
+    }
+
+    return businessData;
+  } catch (error) {
+    console.error('Error en getBusinessById:', error);
+    throw error;
+  }
+};
+
+// Actualizar negocio
 export const updateBusiness = async (id, data, token) => {
   if (!token) {
     throw new Error("No estás autenticado");
@@ -55,17 +99,29 @@ export const updateBusiness = async (id, data, token) => {
   formData.append("phone", data.phone);
   formData.append("email", data.email);
   if (data.logo) {
-    formData.append("logo", data.logo); // Asegúrate de pasar un archivo
+    formData.append("logo", data.logo);
   }
   formData.append("website", data.website);
+
+  // Normalizar schedule si está presente
+  if (data.schedule) {
+    const normalizedSchedule = data.schedule.map(day => ({
+      day: day.day.charAt(0).toUpperCase() + day.day.slice(1).toLowerCase(),
+      intervals: day.intervals.map(interval => ({
+        startTime: interval.startTime,
+        endTime: interval.endTime
+      }))
+    }));
+    formData.append("schedule", JSON.stringify(normalizedSchedule));
+  }
 
   try {
     const response = await fetch(`${API_URL}/businesses/${id}`, {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${token}`, // Incluye el token de autenticación
+        Authorization: `Bearer ${token}`,
       },
-      body: formData, // Envía el FormData directamente
+      body: formData,
     });
 
     if (!response.ok) {
@@ -80,62 +136,51 @@ export const updateBusiness = async (id, data, token) => {
   }
 };
 
-
-  // Eliminar negocio
+// Eliminar negocio
 export const deleteBusiness = async (id, token) => {
-    try {
-      const response = await fetch(`${API_URL}/businesses/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-  
-      if (!response.ok) throw new Error('Error al eliminar el negocio');
-      return await response.json();
-    } catch (error) {
-      console.error("Error en deleteBusiness:", error);
-      throw error;
-    }
-  };
-
-  //Obtener negocios creados por un usuario en /tu-perfil
-  export const getUserBusinesses = async (token) => {
-    try {
-      const response = await fetch('http://localhost:5000/api/businesses/user', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`, // Incluye el token
-        },
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al obtener los negocios');
+  try {
+    const response = await fetch(`${API_URL}/businesses/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
       }
-  
-      return await response.json();
-    } catch (error) {
-      console.error('Error en getUserBusinesses:', error);
-      throw error;
+    });
+
+    if (!response.ok) throw new Error('Error al eliminar el negocio');
+    return await response.json();
+  } catch (error) {
+    console.error("Error en deleteBusiness:", error);
+    throw error;
+  }
+};
+
+// Obtener negocios del usuario
+export const getUserBusinesses = async (token) => {
+  try {
+    const response = await fetch(`${API_URL}/businesses/user`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al obtener los negocios');
     }
-  };
-  
-  //Obtiene datos de un negocio especifico
-  export const getBusinessById = async (id, token) => {
-    try {
-      const response = await fetch(`${API_URL}/businesses/${id}`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token})}`, //Si usa autenticacion
-        },
-      });
-  
-      if (!response.ok) throw new Error('Error al obtener el negocio');
-  
-      return await response.json();
-    } catch (error) {
-      console.error('Error en getBusinessById:', error);
-      throw error;
-    }
-  };
+
+    const businesses = await response.json();
+    
+    // Normalizar schedules
+    return businesses.map(business => ({
+      ...business,
+      schedule: business.schedule ? business.schedule.map(day => ({
+        day: day.day,
+        intervals: day.intervals || []
+      })) : []
+    }));
+  } catch (error) {
+    console.error('Error en getUserBusinesses:', error);
+    throw error;
+  }
+};
