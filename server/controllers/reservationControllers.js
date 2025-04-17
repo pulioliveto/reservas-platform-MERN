@@ -1,4 +1,4 @@
-const Reservation = require('../models/Reservation');
+import Reservation from '../models/Reservation.js';
 
 // Crear una nueva reserva
 const createReservation = async (req, res) => {
@@ -36,4 +36,4 @@ const getUserReservations = async (req, res) => {
   }
 };
 
-module.exports = { createReservation, getUserReservations };
+export { createReservation, getUserReservations };

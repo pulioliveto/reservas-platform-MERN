@@ -11,11 +11,16 @@ export const createBusiness = async (data, token) => {
   formData.append('description', data.description);
   formData.append('address', data.address);
   formData.append('phone', data.phone);
-  formData.append('email', data.email);
+  formData.append('instagram', data.instagram);
+  formData.append('facebook', data.facebook);
   if (data.logo) {
     formData.append('logo', data.logo);
   }
+  if (data.youtube) {
+    formData.append('youtube', data.youtube);
+  }
   formData.append('website', data.website);
+  formData.append('turnoDuration', data.turnoDuration); // Enviar duración del turno
 
   // Mapeo de número a nombre de día
   const DIAS_SEMANA = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -97,12 +102,17 @@ export const updateBusiness = async (id, data, token) => {
   formData.append("description", data.description);
   formData.append("address", data.address);
   formData.append("phone", data.phone);
-  formData.append("email", data.email);
+  formData.append("instagram", data.instagram);
+  formData.append("facebook", data.facebook);
+  
   if (data.logo) {
     formData.append("logo", data.logo);
   }
+  if (data.youtube) {
+    formData.append("youtube", data.youtube);
+  }
   formData.append("website", data.website);
-
+  formData.append("turnoDuration", data.turnoDuration); // Enviar duración del turno
   // Normalizar schedule si está presente
   if (data.schedule) {
     const normalizedSchedule = data.schedule.map(day => ({

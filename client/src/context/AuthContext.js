@@ -25,20 +25,21 @@ export const AuthProvider = ({ children }) => {
   const signInWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
-      const accessToken = result.credential.accessToken;
+      const accessToken = result.credential ? result.credential.accessToken : null;
 
-      // Envía el accessToken al servidor
-      const response = await fetch('/api/google-calendar', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ accessToken }),
-      });
+      if (accessToken) {
+        // Envía el accessToken al servidor solo si existe
+        const response = await fetch('/api/google-calendar', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ accessToken }),
+        });
 
-      const data = await response.json();
-      console.log('Google Calendar Data:', data);
-
+        const data = await response.json();
+        console.log('Google Calendar Data:', data);
+      }
     } catch (error) {
       console.error('Error during sign-in:', error);
     }

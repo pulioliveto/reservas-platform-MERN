@@ -1,11 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const businessSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
   address: { type: String, required: true },
-  phone: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  phone: { type: String},
+  facebook: { type: String },
+  instagram: { type: String },
+  youtube: { type: String },
   website: { type: String },
   logo: { type: String },
   schedule: [
@@ -41,7 +43,9 @@ const businessSchema = new mongoose.Schema({
       ]
     }
   ],
+  turnoDuration: { type: Number, required: true }, // Duración de cada turno en minutos
+  createdBy: { type: String, required: true }, 
   createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Business', businessSchema);
+export default mongoose.model('Business', businessSchema);

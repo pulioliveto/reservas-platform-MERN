@@ -1,7 +1,7 @@
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const InstagramStrategy = require('passport-instagram').Strategy;
-const User = require('../models/User'); // Asegúrate de que la ruta sea correcta
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { Strategy as InstagramStrategy } from 'passport-instagram';
+import User from '../models/User.js';
 
 // Configurar Google Strategy
 passport.use(new GoogleStrategy({
@@ -61,3 +61,5 @@ passport.deserializeUser((id, done) => {
         done(null, user);
     });
 });
+
+export default passport;

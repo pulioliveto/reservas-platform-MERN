@@ -1,8 +1,8 @@
-const Business = require('../models/Business'); // Asegúrate de importar el modelo de Business
+import Business from '../models/Business.js'; // Asegúrate de importar el modelo de Business
 
 const getUserBusinesses = async (req, res) => {
   try {
-    const userId = req.user.id; // Aquí se obtiene el ID del usuario desde el token
+    const userId = req.user.uid; // Usar uid en vez de id
     const businesses = await Business.find({ createdBy: userId }); 
     res.status(200).json(businesses); // Devuelve los negocios
   } catch (error) {
@@ -11,12 +11,11 @@ const getUserBusinesses = async (req, res) => {
   }
 };
 
-
 const updateBusiness = async (req, res) => {
     const { id } = req.params; // ID del negocio a actualizar
     const updatedData = req.body;
   
-    try {
+    try { 
       const updatedBusiness = await Business.findByIdAndUpdate(
         id,
         updatedData,
@@ -34,8 +33,4 @@ const updateBusiness = async (req, res) => {
     }
   };  
 
-  
-
-module.exports = {
-  getUserBusinesses,updateBusiness,
-};
+export { getUserBusinesses, updateBusiness };

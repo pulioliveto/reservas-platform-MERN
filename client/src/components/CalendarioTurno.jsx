@@ -13,32 +13,32 @@ const DIAS_SEMANA = [
 ];
 
 const TimePicker10Min = ({ value, onChange, disabled }) => {
-  const hours = Array.from({ length: 24 }, (_, i) => i);
+  const hours = Array.from({ length: 24 }, (_, i) => i); // 0 a 23
   const minutes = ['00', '10', '20', '30', '40', '50'];
 
   const handleHourChange = (e) => {
-    const newHour = e.target.value;
+    const newHour = e.target.value.padStart(2, '0');
     const [_, currentMin] = value.split(':');
-    onChange(`${newHour.padStart(2, '0')}:${currentMin || '00'}`);
+    onChange(`${newHour}:${currentMin || '00'}`);
   };
 
   const handleMinuteChange = (e) => {
     const newMin = e.target.value;
     const [currentHour] = value.split(':');
-    onChange(`${currentHour || '00'}:${newMin}`);
+    onChange(`${currentHour ? currentHour.padStart(2, '0') : '00'}:${newMin}`);
   };
 
   return (
     <div className="d-flex align-items-center">
       <Form.Select 
-        value={value ? value.split(':')[0] : ''}
+        value={value ? value.split(':')[0].padStart(2, '0') : ''}
         onChange={handleHourChange}
         disabled={disabled}
         style={{ width: '70px' }}
       >
         <option value="">HH</option>
         {hours.map(hour => (
-          <option key={hour} value={hour}>
+          <option key={hour} value={hour.toString().padStart(2, '0')}>
             {hour.toString().padStart(2, '0')}
           </option>
         ))}

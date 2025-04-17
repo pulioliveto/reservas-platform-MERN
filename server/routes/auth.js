@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import User from '../models/User.js';
+import { auth } from '../middleware/firebaseAuth.js';
+
 const router = express.Router();
-const User = require('../models/User');
-const { auth } = require('../middleware/firebaseAuth'); // Middleware para verificar el token de Firebase
 
 // Ruta para registrar o autenticar usuarios con Google
 router.post('/login', auth, async (req, res) => {
@@ -31,4 +32,4 @@ router.post('/login', auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

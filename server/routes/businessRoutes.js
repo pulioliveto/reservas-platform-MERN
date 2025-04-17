@@ -1,12 +1,13 @@
-const express = require('express');
+import express from 'express';
+import Business from '../models/Business.js';
+import upload from '../upload.js';
+import multer from 'multer';
+import path from 'path';
+import { auth } from '../middleware/firebaseAuth.js';
+import { getUserBusinesses, updateBusiness } from '../controllers/businessControllers.js';
+
 const router = express.Router();
-const Business = require('../models/Business');
-const upload = require('../upload');// Middleware de subida de archivos}
-const multer = require('multer')
-const path = require("path");
-const { auth } = require('../middleware/firebaseAuth');
-const { getUserBusinesses, updateBusiness} = require('../controllers/businessControllers');
- 
+
 // Configuración de multer para almacenar los archivos en una carpeta local llamada 'uploads'
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -34,12 +35,13 @@ const uploads = multer({ storage, fileFilter  });
 // Ruta para crear un nuevo negocio
 router.post('/create', auth, uploads.single('logo'), async (req, res) => {
   try {
+    console.log('Usuario autenticado en /create:', req.user);
     console.log('Datos recibidos en el backend:', req.body);
 
-    const { name, description, address, phone, email, website, schedule } = req.body;
+    const { name, description, address, phone, facebook, instagram, youtube, website, schedule, turnoDuration } = req.body;
 
     // Validar campos obligatorios
-    if (!name || !address || !phone || !email) {
+    if (!name || !address || !phone) {
       return res.status(400).json({ message: 'Faltan campos obligatorios.' });
     }
 
@@ -61,16 +63,21 @@ router.post('/create', auth, uploads.single('logo'), async (req, res) => {
       return res.status(400).json({ message: 'Debe proporcionar horarios para el negocio.' });
     }
 
+    console.log(req.user); // DEPURACIÓN
+
     // Construir los datos del negocio
     const businessData = {
       name,
       description,
       address,
       phone,
-      email,
+      facebook,
+      instagram,
+      youtube,
       website: website || '',
       logo: req.file ? req.file.filename : null, // Guardar solo el nombre del archivo
       schedule: parsedSchedule, // Usar el schedule parseado
+      turnoDuration: Number(turnoDuration), // Asegura que sea número
       createdBy: req.user.uid, // ID del usuario que creó el negocio
     };
 
@@ -86,9 +93,7 @@ router.post('/create', auth, uploads.single('logo'), async (req, res) => {
 });
 
 
-
-module.exports = router;
-  // Obtener todos los negocios
+// Obtener todos los negocios
 router.get('/search', async (req, res) => {
   const { query } = req.query;
   console.log("Consulta de busqueda recibida", query);
@@ -108,47 +113,47 @@ router.get('/search', async (req, res) => {
     }
   });
 
-  router.get('/user', auth, async (req, res) => {
-    try {
-      console.log('Usuario autenticado en /user:', req.user);
-  
-      const businesses = await Business.find({ createdBy: req.user.uid });
-      console.log('Negocios encontrados:', businesses);
-  
-      res.json(businesses);
-    } catch (error) {
-      console.error('Error al obtener los negocios del usuario:', error);
-      res.status(500).json({ message: 'Error al obtener los negocios' });
-    }
-  });
-  
-  
+router.get('/user', auth, async (req, res) => {
+  try {
+    console.log('Usuario autenticado en /user:', req.user);
 
-  // Obtener un negocio por ID
-  router.get('/:id', async (req, res) => {
-    try {
-      const business = await Business.findById(req.params.id);
-      if (!business) {
-        return res.status(404).json({ message: 'Negocio no encontrado' });
-      }
-      res.status(200).json(business);
-    } catch (error) {
-      console.error('Error al obtener el negocio:', error);
-      res.status(500).json({ message: 'Error al obtener el negocio' });
-    }
-  });
+    const businesses = await Business.find({ createdBy: req.user.uid });
+    console.log('Negocios encontrados:', businesses);
 
-  // Ruta para actualizar un negocio
+    res.json(businesses);
+  } catch (error) {
+    console.error('Error al obtener los negocios del usuario:', error);
+    res.status(500).json({ message: 'Error al obtener los negocios' });
+  }
+});
+
+// Obtener un negocio por ID
+router.get('/:id', async (req, res) => {
+  try {
+    const business = await Business.findById(req.params.id);
+    if (!business) {
+      return res.status(404).json({ message: 'Negocio no encontrado' });
+    }
+    res.status(200).json(business);
+  } catch (error) {
+    console.error('Error al obtener el negocio:', error);
+    res.status(500).json({ message: 'Error al obtener el negocio' });
+  }
+});
+
+// Ruta para actualizar un negocio
 router.put('/:id', auth, uploads.single('logo'), async (req, res) => {
   const { id } = req.params;
-  const { name, description, address, phone, email, website } = req.body;
+  const { name, description, address, phone, facebook, instagram, youtube, website } = req.body;
 
   const updatedData = {
     name,
     description,
     address,
     phone,
-    email,
+    facebook,
+    instagram,
+    youtube,
     website,
     logo: req.file ? req.file.filename : undefined, // Guardar solo el nombre del archivo
   };
@@ -169,21 +174,20 @@ router.put('/:id', auth, uploads.single('logo'), async (req, res) => {
   }
 });
 
-  // Eliminar un negocio
+// Eliminar un negocio
 router.delete('/:id', async (req, res) => {
-    try {
-      const business = await Business.findByIdAndDelete(req.params.id);
-      if (!business) return res.status(404).json({ message: 'Business not found' });
-      res.json({ message: 'Business deleted' });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  });
-  
-
+  try {
+    const business = await Business.findByIdAndDelete(req.params.id);
+    if (!business) return res.status(404).json({ message: 'Business not found' });
+    // Eliminar todas las reservas asociadas a este negocio
+    await import('../models/Reservation.js').then(({ default: Reservation }) => Reservation.deleteMany({ negocioId: req.params.id }));
+    res.json({ message: 'Business deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // Ruta para obtener los negocios del usuario autenticado
 router.get('/businesses/user', auth, getUserBusinesses);
 
-
-  module.exports = router;
+export default router;

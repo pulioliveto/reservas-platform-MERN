@@ -1,4 +1,4 @@
-const { googleCalendarService } = require('../googleCalendarService');
+import { googleCalendarService } from '../googleCalendarService.js';
 
 const callendarControllers = async (req, res) => {
   const { accessToken, calendarId } = req.body;
@@ -16,5 +16,5 @@ const callendarControllers = async (req, res) => {
   }
 };
 
-module.exports = { callendarControllers };
+export { callendarControllers };
 

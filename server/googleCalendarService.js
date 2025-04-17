@@ -1,4 +1,4 @@
-const { google } = require('googleapis');
+import { google } from 'googleapis';
 
 const googleCalendarService = async (accessToken, calendarId) => {
   const oauth2Client = new google.auth.OAuth2();
@@ -19,4 +19,4 @@ const googleCalendarService = async (accessToken, calendarId) => {
   return events.data.items;
 };
 
-module.exports = { googleCalendarService };
+export { googleCalendarService };

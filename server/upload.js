@@ -1,5 +1,5 @@
-const multer = require('multer');
-const path = require('path');
+import multer from 'multer';
+import path from 'path';
 
 // Configuración de almacenamiento de Multer
 const storage = multer.diskStorage({
@@ -23,4 +23,4 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage, fileFilter: fileFilter });
     
 // Exportar upload para usar en las rutas
-module.exports = upload;
+export default upload;

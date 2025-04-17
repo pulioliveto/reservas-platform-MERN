@@ -1,37 +1,39 @@
 import React from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 const ReservaModal = ({ show, onHide, selectedDay, selectedSlot, business, onConfirm }) => {
+  // Formatear fecha y hora para mostrar
+  const fecha = selectedDay ? format(selectedDay, 'EEEE dd/MM/yyyy', { locale: es }) : '';
+  const hora = selectedSlot?.time || '';
+
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>Confirmar Reserva</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-         {/* Mostrar el logo si existe */}
-         {business.logo && (
-          <div className="text-center mb-3">
-            <img
-              src={business.logo}
-              alt={`${business.name} logo`}
-              style={{ width: '100px', height: '100px', objectFit: 'contain' }}
-            />
-          </div>
-        )}
-        <p><strong>Negocio:</strong> {business.name}</p>
-        <p><strong>Fecha:</strong> {selectedDay && selectedDay.toLocaleDateString('es-ES')}</p>
-        <p><strong>Horario:</strong> {selectedSlot}</p>
-        <p><strong>Costo:</strong> ${business?.price || 'Consultar'}</p>
-        <Form>
-          <Form.Group>
-            <Form.Label>Seleccionar Tratamiento</Form.Label>
-            <Form.Control as="select">
-              {business?.treatments?.map((treatment, index) => (
-                <option key={index} value={treatment}>{treatment}</option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-        </Form>
+        <div className="text-center mb-3">
+          <i className="bi bi-calendar-check" style={{ fontSize: '2rem', color: '#007bff' }}></i>
+        </div>
+        <p className="text-center mb-3">
+          <strong>¿Deseas confirmar la reserva?</strong>
+        </p>
+        <ul className="list-group mb-3">
+          <li className="list-group-item">
+            <strong>Negocio:</strong> {business.name}
+          </li>
+          <li className="list-group-item">
+            <strong>Día:</strong> {fecha}
+          </li>
+          <li className="list-group-item">
+            <strong>Hora:</strong> {hora}
+          </li>
+        </ul>
+        <div className="alert alert-info text-center">
+          Recuerda llegar a tiempo a tu turno.
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
