@@ -1,6 +1,6 @@
 import { getAuth } from 'firebase/auth';
 
-const API_URL = 'http://localhost:5000/api'; // Ajusta la URL de acuerdo a tu configuración
+const API_URL = process.env.REACT_APP_API_URL + '/api'; // Ajusta la URL de acuerdo a tu configuración
 
 export const getGoogleCalendarEvents = async (accessToken, calendarId) => {
   try {

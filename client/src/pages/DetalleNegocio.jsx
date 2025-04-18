@@ -128,7 +128,7 @@ const DetalleNegocio = () => {
   // Consultar turnos ocupados para el negocio y fecha seleccionada
   const fetchReservedSlots = useCallback(async (negocioId, fecha) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/turnos/${negocioId}?fecha=${fecha}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/turnos/${negocioId}?fecha=${fecha}`);
       if (response.ok) {
         const data = await response.json();
         setReservedSlots(data.map(r => r.turno));
@@ -181,7 +181,7 @@ const DetalleNegocio = () => {
         const auth = getAuth();
         const user = auth.currentUser;
         const token = user ? await user.getIdToken() : null;
-        const response = await fetch(`http://localhost:5000/api/turnos/${business._id}/all`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/turnos/${business._id}/all`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (!response.ok) throw new Error("No se pudieron obtener las reservas");
@@ -263,7 +263,7 @@ const DetalleNegocio = () => {
       const auth = getAuth();
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : null;
-      const response = await fetch(`http://localhost:5000/api/businesses/${business._id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/businesses/${business._id}`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
         body: (() => {
@@ -374,7 +374,7 @@ const DetalleNegocio = () => {
           </div>
           {business.logo && (
             <div className="ms-md-4 mt-3 mt-md-0 text-center">
-              <img src={`http://localhost:5000/uploads/${business.logo}`} alt="Logo" style={{ maxWidth: 120, maxHeight: 120, borderRadius: 12, objectFit: 'contain', background: '#fff', border: '1px solid #eee' }} />
+              <img src={`${process.env.REACT_APP_API_URL}/uploads/${business.logo}`} alt="Logo" style={{ maxWidth: 120, maxHeight: 120, borderRadius: 12, objectFit: 'contain', background: '#fff', border: '1px solid #eee' }} />
             </div>
           )}
         </div>

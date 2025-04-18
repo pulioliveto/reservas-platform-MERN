@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import { getAuth } from 'firebase/auth';
 // API URL centralizado en la configuración
 
-const BASE_URL = "http://localhost:5000/api/turnos"; // URL base del backend para reservas
+const BASE_URL = process.env.REACT_APP_API_URL + "/api/turnos"; // URL base del backend para reservas
 
 // Función para reservar un turno
 export const reservarTurno = async (data) => {

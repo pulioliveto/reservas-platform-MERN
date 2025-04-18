@@ -15,7 +15,7 @@ const BuscarNegocio = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/businesses/search?query=${searchQuery}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/businesses/search?query=${searchQuery}`);
       if (!response.ok) {
         throw new Error('Error en la búsqueda');
       }
@@ -61,7 +61,7 @@ const BuscarNegocio = () => {
             <div className="d-flex align-items-center">
               {business.logo && (
                 <img
-                  src={`http://localhost:5000/uploads/${business.logo.replace("\\", "/")}`}
+                  src={`${process.env.REACT_APP_API_URL}/uploads/${business.logo.replace("\\", "/")}`}
                   alt={`${business.name} logo`}
                   style={{ width: '50px', height: '50px', marginRight: '10px' }}
                 />

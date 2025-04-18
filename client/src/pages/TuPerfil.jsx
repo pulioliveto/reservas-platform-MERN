@@ -76,7 +76,7 @@ const TuPerfil = () => {
                 <div className="d-flex align-items-center">
                   {business.logo && (
                     <img
-                      src={`http://localhost:5000/uploads/${business.logo.replace("\\", "/")}`}
+                      src={`${process.env.REACT_APP_API_URL}/uploads/${business.logo.replace("\\", "/")}`}
                       alt={`${business.name} logo`}
                       style={{ width: '50px', height: '50px', marginRight: '10px' }}
                     />

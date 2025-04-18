@@ -17,7 +17,7 @@ const MisTurnos = () => {
         const user = auth.currentUser;
         if (!user) return;
         const token = await user.getIdToken();
-        const response = await fetch("http://localhost:5000/api/turnos/mis-turnos", {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/turnos/mis-turnos`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
