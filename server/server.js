@@ -74,11 +74,15 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => { console.log(`Servidor corriendo en el puerto ${PORT}`); });
 
 // Configuración del CORS
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://front-production-437f.up.railway.app'
+];
 app.use(cors({
-    origin: 'http://localhost:3000', // Permite solicitudes desde el frontend
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Authorization', 'Content-Type'], 
-  }));
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Authorization', 'Content-Type'],
+}));
 
 // Inicialización de Firebase Admin SDK usando variable de entorno
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
