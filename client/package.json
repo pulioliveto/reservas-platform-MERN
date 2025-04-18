@@ -30,15 +30,14 @@
     "react-select": "^5.10.1",
     "react-select-country-list": "^2.2.3",
     "react-toastify": "^10.0.6",
-    "serve": "^14.2.4",
     "socket.io-client": "^4.8.1",
     "sweetalert2": "^11.14.5",
     "tailwind-merge": "^2.5.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "serve -s build",
+    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
