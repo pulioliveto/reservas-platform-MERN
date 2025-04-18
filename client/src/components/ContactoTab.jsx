@@ -1,6 +1,5 @@
 import React from 'react';
 import { FaFacebook, FaInstagram, FaYoutube, FaGlobe } from 'react-icons/fa';
-import 'react-phone-input-2/lib/bootstrap.css';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import CountryFlag from 'react-country-flag';
 
