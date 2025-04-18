@@ -109,4 +109,11 @@ app.use('/api/auth', authRoutes);
 // Usar las rutas de Google Calendar
 app.use('/api', calendarRoutes);
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  });
+}
+
 app.get('/', (req, res) => { res.send('¡Bienvenido a la plataforma de reservas!'); });
