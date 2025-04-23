@@ -51,7 +51,7 @@ const Navbar = () => {
       if (!user) return setNotifications([]);
       try {
         const token = await getAuth().currentUser.getIdToken();
-        const res = await fetch('http://localhost:5000/api/turnos/notificaciones/admin', {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/turnos/notificaciones/admin`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
@@ -67,7 +67,7 @@ const Navbar = () => {
   React.useEffect(() => {
     let socket;
     if (user) {
-      socket = io('http://localhost:5000', { transports: ['websocket'] });
+      socket = io(process.env.REACT_APP_API_URL, { transports: ['websocket'] });
       socket.on('connect', () => {
         socket.emit('register', user.uid);
       });
@@ -88,7 +88,7 @@ const Navbar = () => {
     if (unreadCount > 0) {
       const ids = notifications.filter(n => !n.read).map(n => n._id);
       getAuth().currentUser.getIdToken().then(token => {
-        fetch('http://localhost:5000/api/turnos/notificaciones/marcar-leidas', {
+        fetch(`${process.env.REACT_APP_API_URL}/api/turnos/notificaciones/marcar-leidas`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ ids })
@@ -107,7 +107,7 @@ const Navbar = () => {
     if (!user) return;
     try {
       const token = await getAuth().currentUser.getIdToken();
-      await fetch('http://localhost:5000/api/turnos/notificaciones/limpiar-todas', {
+      await fetch(`${process.env.REACT_APP_API_URL}/api/turnos/notificaciones/limpiar-todas`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       });

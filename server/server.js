@@ -40,7 +40,10 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'https://front-production-437f.up.railway.app'
+    ],
     methods: ['GET', 'POST'],
     credentials: true
   }
