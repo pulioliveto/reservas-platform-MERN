@@ -42,7 +42,8 @@ const io = new SocketIOServer(server, {
   cors: {
     origin: [
       'http://localhost:3000',
-      'https://front-production-437f.up.railway.app'
+      'https://front-production-437f.up.railway.app',
+      'https://reservas-platform-mern-production.up.railway.app' // <-- Agregado dominio de Railway frontend
     ],
     methods: ['GET', 'POST'],
     credentials: true
@@ -79,7 +80,8 @@ server.listen(PORT, () => { console.log(`Servidor corriendo en el puerto ${PORT}
 // Configuración del CORS
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://front-production-437f.up.railway.app'
+  'https://front-production-437f.up.railway.app',
+  'https://reservas-platform-mern-production.up.railway.app' // <-- Agregado dominio de Railway frontend
 ];
 app.use(cors({
   origin: allowedOrigins,
@@ -116,11 +118,5 @@ app.use('/api/auth', authRoutes);
 // Usar las rutas de Google Calendar
 app.use('/api', calendarRoutes);
 
-// if (process.env.NODE_ENV === 'production') {
-//   app.use(express.static(path.join(__dirname, '../client/build')));
-//   app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-//   });
-// }
 
 app.get('/', (req, res) => { res.send('¡Bienvenido a la plataforma de reservas!'); });
