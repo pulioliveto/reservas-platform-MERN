@@ -1,0 +1,196 @@
+/* Estilos para la página de login */
+.login-page {
+    height: 100vh; /* Cambiado de min-height a height para ajustar exactamente al viewport */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background-color: #f8faff;
+    padding: 0; /* Eliminado el padding vertical */
+  }
+  
+  /* Formas de fondo */
+  .login-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  
+  .login-shape {
+    position: absolute;
+    opacity: 0.6;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+  
+  .shape-1 {
+    top: -150px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(135deg, #4a6bff 0%, #2541b2 100%);
+    animation: float 15s ease-in-out infinite alternate;
+  }
+  
+  .shape-2 {
+    bottom: -200px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, #4a6bff 0%, #2541b2 100%);
+    animation: float 20s ease-in-out infinite alternate-reverse;
+  }
+  
+  .shape-3 {
+    top: 40%;
+    left: 30%;
+    width: 200px;
+    height: 200px;
+    background: rgba(74, 107, 255, 0.1);
+    animation: float 25s ease-in-out infinite alternate;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(20px, 20px) rotate(5deg);
+    }
+    100% {
+      transform: translate(-20px, 10px) rotate(-5deg);
+    }
+  }
+  
+  /* Contenedor principal */
+  .login-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-height: 100vh;
+  }
+  
+  /* Tarjeta de login */
+  .login-card {
+    border-radius: 16px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95);
+    transition: transform 0.3s ease;
+    max-height: 90vh; /* Asegurar que la tarjeta no sea más alta que el viewport */
+  }
+  
+  .login-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Logo */
+  .login-logo {
+    max-width: 180px; /* Reducido ligeramente */
+    height: auto;
+    margin: 0 auto;
+  }
+  
+  /* Divider con texto */
+  .login-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1rem 0; /* Reducido de 1.5rem */
+    color: #6c757d;
+  }
+  
+  .login-divider::before,
+  .login-divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .login-divider span {
+    padding: 0 1rem;
+    font-size: 0.875rem;
+  }
+  
+  /* Botón de Google */
+  .login-google-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    color: #333;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .login-google-button:hover {
+    background-color: #f8f9fa;
+    border-color: #d0d0d0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .login-google-button:active {
+    transform: translateY(1px);
+  }
+  
+  /* Texto del footer */
+  .login-footer-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+  }
+  
+  .login-footer-text a {
+    color: #4a6bff;
+    font-weight: 500;
+  }
+  
+  .login-footer-text a:hover {
+    text-decoration: underline !important;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 576px) {
+    .login-card {
+      margin: 0 1rem;
+    }
+  
+    .login-logo {
+      max-width: 150px; /* Reducido aún más para móviles */
+    }
+  
+    .shape-1,
+    .shape-2 {
+      width: 300px;
+      height: 300px;
+    }
+  
+    .shape-3 {
+      width: 150px;
+      height: 150px;
+    }
+  
+    /* Reducir padding en móviles */
+    .login-card .card-body {
+      padding: 1.5rem !important;
+    }
+  
+    /* Reducir espaciado vertical */
+    .text-center.mb-4 {
+      margin-bottom: 1rem !important;
+    }
+  
+    .login-divider {
+      margin: 0.75rem 0;
+    }
+  
+    .mt-4 {
+      margin-top: 1rem !important;
+    }
+  }
+  

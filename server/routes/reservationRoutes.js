@@ -8,7 +8,7 @@ import Notification from '../models/Notification.js';
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  const { negocioId, clienteId, turno, fecha } = req.body;
+  const { negocioId, clienteId, turno, fecha, dni, telefono, email} = req.body;
 
   // Validar datos de entrada
   if (!negocioId || !clienteId || !turno || !fecha) {
@@ -33,6 +33,9 @@ router.post("/", async (req, res) => {
       clienteId,
       turno,
       fecha,
+      dni,
+      telefono,
+      email,
       isAvailable: false, // Marca el turno como no disponible
     });
 
@@ -205,7 +208,10 @@ router.post('/notificaciones/marcar-leidas', auth, async (req, res) => {
 // Limpiar todas las notificaciones del usuario autenticado
 router.post('/notificaciones/limpiar-todas', auth, async (req, res) => {
   try {
+    // Elimina todas las notificaciones del usuario autenticado
     await Notification.deleteMany({ recipient: req.user.uid });
+    // Si solo quieres marcarlas como leídas (opcional, si no las borras):
+    // await Notification.updateMany({ recipient: req.user.uid }, { $set: { read: true } });
     res.json({ message: 'Todas las notificaciones eliminadas' });
   } catch (err) {
     res.status(500).json({ message: 'Error al eliminar notificaciones', error: err.message });

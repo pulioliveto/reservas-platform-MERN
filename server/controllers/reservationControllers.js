@@ -2,7 +2,7 @@ import Reservation from '../models/Reservation.js';
 
 // Crear una nueva reserva
 const createReservation = async (req, res) => {
-  const { businessId, date, time } = req.body;
+  const { businessId, date, time, dni, telefono, email } = req.body;
   const userId = req.user.id;  // Obtener el id del usuario desde el token
 
   try {
@@ -11,6 +11,9 @@ const createReservation = async (req, res) => {
       business: businessId,
       date,
       time,
+      dni,
+      telefono,
+      email,
     });
 
     await newReservation.save();

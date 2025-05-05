@@ -5,11 +5,11 @@ import multer from 'multer';
 import path from 'path';
 import { auth } from '../middleware/firebaseAuth.js';
 import { getUserBusinesses, updateBusiness } from '../controllers/businessControllers.js';
-import { io } from 'socket.io-client';
+
 
 const router = express.Router();
 
-const socket = io(process.env.REACT_APP_API_URL, { transports: ['websocket'] });
+
 
 // Configuración de multer para almacenar los archivos en una carpeta local llamada 'uploads'
 const storage = multer.diskStorage({
@@ -40,6 +40,8 @@ router.post('/create', auth, uploads.single('logo'), async (req, res) => {
   try {
     console.log('Usuario autenticado en /create:', req.user);
     console.log('Datos recibidos en el backend:', req.body);
+
+    const ownerEmail = req.user.email; // Obtener el email del usuario autenticado
 
     const { name, description, address, phone, facebook, instagram, youtube, website, schedule, turnoDuration } = req.body;
 
@@ -82,6 +84,7 @@ router.post('/create', auth, uploads.single('logo'), async (req, res) => {
       schedule: parsedSchedule, // Usar el schedule parseado
       turnoDuration: Number(turnoDuration), // Asegura que sea número
       createdBy: req.user.uid, // ID del usuario que creó el negocio
+      ownerEmail
     };
 
     // Crear y guardar el negocio en la base de datos

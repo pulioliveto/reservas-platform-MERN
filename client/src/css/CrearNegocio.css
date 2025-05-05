@@ -1,0 +1,116 @@
+/* Animaciones para transiciones */
+.animate__animated {
+    animation-duration: 0.5s;
+  }
+  
+  .animate__fadeIn {
+    animation-name: fadeIn;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Estilos para los input groups */
+  .input-group-text {
+    color: #6c757d;
+  }
+  
+  /* Estilos para el logo preview */
+  .logo-preview-container {
+    transition: all 0.3s ease;
+  }
+  
+  .logo-preview-container:hover {
+    transform: translateY(-3px);
+  }
+  
+  /* Estilos para el calendario de turnos */
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4a6bff;
+    color: white;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+  }
+  
+  /* Estilos para los botones */
+  .btn-primary {
+    background-color: #4a6bff;
+    border-color: #4a6bff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #3a5ae8;
+    border-color: #3a5ae8;
+  }
+  
+  .btn-outline-primary {
+    color: #4a6bff;
+    border-color: #4a6bff;
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: #4a6bff;
+    border-color: #4a6bff;
+  }
+  
+  /* Estilos para los form controls */
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #4a6bff;
+    box-shadow: 0 0 0 0.25rem rgba(74, 107, 255, 0.25);
+  }
+  
+  /* Estilos para los switches */
+  .form-switch .form-check-input:checked {
+    background-color: #4a6bff;
+    border-color: #4a6bff;
+  }
+  
+  /* Estilos para las tablas */
+  .table {
+    border-color: #dee2e6;
+  }
+  
+  .table thead th {
+    font-weight: 600;
+    color: #495057;
+  }
+  
+  /* Estilos para los pasos del formulario */
+  .step-indicator {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  
+  .step-indicator::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #e9ecef;
+    z-index: 1;
+  }
+  
+  .step {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  

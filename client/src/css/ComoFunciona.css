@@ -1,0 +1,378 @@
+/* Estilos generales */
+.como-funciona-page {
+    position: relative;
+    overflow: hidden;
+    background-color: #f8faff;
+    color: #333;
+  }
+  
+  /* Formas geométricas de fondo */
+  .background-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.6;
+  }
+  
+  .shape-1 {
+    top: -150px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(135deg, #4a6bff 0%, #2541b2 100%);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    animation: float 15s ease-in-out infinite alternate;
+  }
+  
+  .shape-2 {
+    bottom: -200px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, #4a6bff 0%, #2541b2 100%);
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    animation: float 20s ease-in-out infinite alternate-reverse;
+  }
+  
+  .shape-3 {
+    top: 20%;
+    left: 20%;
+    width: 300px;
+    height: 300px;
+    background: rgba(74, 107, 255, 0.1);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    animation: float 25s ease-in-out infinite alternate;
+  }
+  
+  .shape-4 {
+    bottom: 10%;
+    right: 10%;
+    width: 200px;
+    height: 200px;
+    background: rgba(74, 107, 255, 0.1);
+    border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+    animation: float 30s ease-in-out infinite alternate-reverse;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(20px, 20px) rotate(5deg);
+    }
+    100% {
+      transform: translate(-20px, 10px) rotate(-5deg);
+    }
+  }
+  
+  /* Asegurar que el contenido esté por encima de las formas */
+  .z-index-1 {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Estilos para la sección de introducción */
+  .intro-section {
+    padding-top: 5rem;
+    padding-bottom: 3rem;
+  }
+  
+  .intro-section h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+  
+  .intro-section .lead {
+    font-size: 1.25rem;
+    color: #555;
+  }
+  
+  /* Estilos para la sección de pasos */
+  .steps-section {
+    padding: 5rem 0;
+  }
+  
+  .steps-container {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 0;
+  }
+  
+  .steps-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background-color: #e0e0e0;
+    transform: translateX(-50%);
+    z-index: 0;
+  }
+  
+  .step-card {
+    position: relative;
+    display: flex;
+    margin-bottom: 3rem;
+    z-index: 1;
+  }
+  
+  .step-card:nth-child(odd) {
+    flex-direction: row;
+    padding-right: 50%;
+  }
+  
+  .step-card:nth-child(even) {
+    flex-direction: row-reverse;
+    padding-left: 50%;
+  }
+  
+  .step-number {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: #4a6bff;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 2;
+  }
+  
+  .step-content {
+    background-color: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    width: 90%;
+    transition: transform 0.3s ease;
+  }
+  
+  .step-card:nth-child(odd) .step-content {
+    margin-right: 2rem;
+  }
+  
+  .step-card:nth-child(even) .step-content {
+    margin-left: 2rem;
+  }
+  
+  .step-content:hover {
+    transform: translateY(-5px);
+  }
+  
+  .step-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #f0f4ff;
+    color: #4a6bff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .step-title {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .step-description {
+    color: #666;
+    margin-bottom: 0;
+  }
+  
+  /* Estilos para la sección de beneficios */
+  .benefits-section {
+    padding: 5rem 0;
+    background-color: white;
+    border-radius: 20px;
+    margin: 2rem 0;
+  }
+  
+  .benefit-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .benefit-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .benefit-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #4a6bff 0%, #2541b2 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    margin: 0 auto;
+  }
+  
+  /* Estilos para la sección de demostración */
+  .demo-section {
+    padding: 5rem 0;
+  }
+  
+  .demo-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+  }
+  
+  .feature-list li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .feature-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: #e6f7ee;
+    color: #28a745;
+    border-radius: 50%;
+    margin-right: 1rem;
+    font-weight: bold;
+  }
+  
+  /* Estilos para la sección de CTA */
+  .cta-section {
+    padding: 3rem 0 5rem;
+  }
+  
+  .bg-gradient {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 16px;
+  }
+  
+  .cta-button {
+    background-color: #4a6bff;
+    border-color: #4a6bff;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .cta-button:hover {
+    background-color: #3a5ae8;
+    border-color: #3a5ae8;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(74, 107, 255, 0.2);
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 991.98px) {
+    .steps-container::before {
+      left: 30px;
+    }
+  
+    .step-card {
+      flex-direction: row !important;
+      padding: 0 0 0 80px !important;
+    }
+  
+    .step-number {
+      left: 30px;
+      transform: translateX(0);
+    }
+  
+    .step-content {
+      width: 100%;
+      margin: 0 !important;
+    }
+  
+    .shape-1,
+    .shape-2 {
+      width: 300px;
+      height: 300px;
+    }
+  
+    .shape-3,
+    .shape-4 {
+      width: 150px;
+      height: 150px;
+    }
+  }
+  
+  @media (max-width: 767.98px) {
+    .intro-section {
+      padding-top: 3rem;
+      padding-bottom: 2rem;
+    }
+  
+    .steps-section,
+    .benefits-section,
+    .demo-section {
+      padding: 3rem 0;
+    }
+  
+    .step-icon {
+      width: 50px;
+      height: 50px;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+  
+    .benefit-icon {
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+    }
+  
+    .cta-button {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 575.98px) {
+    .step-content {
+      padding: 1.5rem;
+    }
+  
+    .step-title {
+      font-size: 1.25rem;
+    }
+  
+    .step-description {
+      font-size: 0.9rem;
+    }
+  
+    .benefit-card {
+      padding: 1.5rem;
+    }
+  }
+  

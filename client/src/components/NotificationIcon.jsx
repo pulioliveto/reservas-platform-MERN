@@ -1,25 +1,12 @@
-import React from 'react';
+import { FaBell } from "react-icons/fa"
 
 const NotificationIcon = ({ unreadCount, onClick }) => (
-  <div style={{ position: 'relative', display: 'inline-block', cursor: 'pointer' }} onClick={onClick}>
-    <i className="bi bi-bell" style={{ fontSize: '1.7rem', color: '#333' }}></i>
-    {unreadCount > 0 && (
-      <span style={{
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        background: 'red',
-        color: 'white',
-        borderRadius: '50%',
-        fontSize: '0.8rem',
-        padding: '2px 6px',
-        minWidth: '18px',
-        textAlign: 'center',
-        fontWeight: 'bold',
-        zIndex: 2
-      }}>{unreadCount}</span>
-    )}
+  <div className="notification-icon-wrapper" onClick={onClick}>
+    <div className="notification-icon">
+      <FaBell />
+    </div>
+    {unreadCount > 0 && <span className="notification-badge">{unreadCount > 99 ? "99+" : unreadCount}</span>}
   </div>
-);
+)
 
-export default NotificationIcon;
+export default NotificationIcon

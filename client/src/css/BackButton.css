@@ -1,0 +1,56 @@
+/* Estilos para el botón de volver */
+.btn-back {
+    position: relative;
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-weight: 500;
+    color: #4a6bff;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+  
+  .btn-back:hover {
+    color: #3a5ae8;
+    transform: translateX(-3px);
+  }
+  
+  .btn-back:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  
+  .btn-back-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background-color: rgba(74, 107, 255, 0.1);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-back:hover .btn-back-icon {
+    background-color: rgba(74, 107, 255, 0.2);
+  }
+  
+  .btn-back-text {
+    font-weight: 500;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 576px) {
+    .btn-back {
+      font-size: 0.85rem;
+    }
+  
+    .btn-back-icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  

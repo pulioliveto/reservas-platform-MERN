@@ -1,0 +1,100 @@
+/* Estilos para la leyenda del calendario */
+.calendario-legend {
+  background-color: white;
+  border-radius: 8px;
+  padding: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+}
+
+.legend-abierto {
+  background-color: #f0f9ff;
+  border: 1px solid #4a6bff;
+}
+
+.legend-pocos {
+  background-color: #fff9db;
+  border: 1px solid #ffc107;
+}
+
+.legend-cerrado {
+  background-color: #fff5f5;
+  border: 1px solid #dc3545;
+}
+
+.legend-ocupado {
+  background-color: #f8f9fa;
+  border: 1px solid #adb5bd;
+}
+
+.legend-text {
+  font-size: 0.8rem;
+  color: #495057;
+}
+
+/* Estilos para el contenedor del calendario */
+.calendar-container {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Estilos para los horarios disponibles */
+.time-slot-btn {
+  transition: all 0.2s ease;
+}
+
+.time-slot-available {
+  background: linear-gradient(135deg, #4a6bff 0%, #2541b2 100%);
+  color: white;
+  border: none;
+}
+
+.time-slot-available:hover {
+  background: linear-gradient(135deg, #3a5ae8 0%, #1a3199 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+/* Estilos responsivos */
+@media (max-width: 576px) {
+  .calendario-legend {
+    padding: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .legend-item {
+    margin-bottom: 0.25rem;
+    margin-right: 0.5rem;
+  }
+
+  .legend-text {
+    font-size: 0.7rem;
+  }
+
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    margin-right: 0.3rem;
+  }
+
+  /* Ajustar el espaciado en móviles */
+  .w-100 h5.fw-bold.mb-4 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem !important;
+  }
+}

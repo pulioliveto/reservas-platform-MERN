@@ -1,69 +1,271 @@
+/* Estilos para el calendario de días */
 .calendario-dias {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.calendario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.calendario-title-container {
+  text-align: center;
+}
+
+.calendario-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  text-transform: capitalize;
+}
+
+.calendario-current-date {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-transform: capitalize;
+}
+
+.btn-calendar {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #495057;
+}
+
+.btn-calendar:hover {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.calendario-dias-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.dia {
+  position: relative;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  aspect-ratio: 1;
+}
+
+.dia-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.dia-nombre {
+  margin: 0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.dia-numero {
+  margin: 0.25rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Estilos para los diferentes estados */
+.dia-abierto {
+  background-color: #f0f9ff;
+  border: 1px solid #4a6bff;
+  color: #4a6bff;
+}
+
+.dia-abierto:hover {
+  background-color: #e0f0ff;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(74, 107, 255, 0.2);
+}
+
+.dia-cerrado {
+  background-color: #fff5f5;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  cursor: not-allowed;
+}
+
+.dia-cerrado:hover {
+  background-color: #ffe0e0;
+}
+
+.dia-ocupado {
+  background-color: #f8f9fa;
+  border: 1px solid #adb5bd;
+  color: #6c757d;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.dia-ocupado:hover {
+  background-color: #e9ecef;
+}
+
+.dia-pocos {
+  background-color: #fff9db;
+  border: 1px solid #ffc107;
+  color: #ff9800;
+  animation: pulse 1.5s infinite;
+}
+
+.dia-pocos:hover {
+  background-color: #fff3bf;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.2);
+}
+
+/* Animación de pulso para días con pocos turnos */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+  }
+}
+
+/* Estilos para el día seleccionado */
+.dia.selected {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dia.selected.dia-abierto {
+  background-color: #4a6bff;
+  color: white;
+}
+
+.dia.selected.dia-pocos {
+  background-color: #ffc107;
+  color: white;
+}
+
+/* Estilos para el día de hoy */
+.dia.today {
+  position: relative;
+}
+
+.dia.today::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #4a6bff;
+}
+
+/* Estilos para los iconos de estado */
+.status-icon-container {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.status-icon {
+  font-size: 0.9rem;
+}
+
+/* Estilos responsivos */
+@media (max-width: 576px) {
+  .calendario-dias {
+    padding: 1rem;
     width: 100%;
-    max-width: 500px;
-    margin: auto;
-    text-align: center;
+    max-width: 100%;
   }
-  
-  .calendario-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .calendario-header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-  }
-  
+
   .calendario-dias-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.5rem;
+    gap: 0.35rem; /* Reducido de 0.5rem para que quepan mejor los días */
     width: 100%;
   }
-  
+
   .dia {
-    padding: 10px;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    min-width: 40px; /* Asegurar un ancho mínimo */
+    min-height: 40px; /* Asegurar una altura mínima */
   }
-  
-  .dia:hover {
-    background-color: #007bff;
-    color: white;
-    transform: scale(1.05);
+
+  .dia-numero {
+    font-size: 1.1rem; /* Reducido de 1.25rem */
+    margin: 0.1rem 0; /* Reducido el margen */
   }
-  
-  .selected {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
+
+  .dia-nombre {
+    font-size: 0.65rem; /* Reducido de 0.7rem */
   }
-  
-  .dia p {
-    margin: 0;
+
+  .calendario-title {
+    font-size: 1.1rem; /* Reducido de 1.25rem */
   }
-  
-  button.btn {
-    padding: 5px 10px;
+
+  .calendario-current-date {
+    font-size: 0.7rem; /* Reducido de 0.75rem */
+  }
+
+  .status-icon {
+    font-size: 0.7rem; /* Reducido de 0.9rem */
+  }
+
+  .status-icon-container {
+    bottom: 4px; /* Ajustado de 8px */
+  }
+
+  /* Hacer que el calendario ocupe todo el ancho disponible */
+  .calendar-container {
+    width: 100%;
+    padding: 0;
+  }
+}
+
+/* Ajustes adicionales para pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .calendario-dias-grid {
+    gap: 0.25rem; /* Aún más reducido */
+  }
+
+  .dia-numero {
     font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
   }
-  
-  button.btn:hover {
-    background-color: #555;
-    color: white;
+
+  .dia-nombre {
+    font-size: 0.6rem;
   }
-  
+}
