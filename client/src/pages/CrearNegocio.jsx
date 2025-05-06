@@ -2,7 +2,6 @@ import { useState, useContext } from "react"
 import { Container, Card, Form, Button, Row, Col, Alert } from "react-bootstrap"
 import { createBusiness } from "../services/apiBusiness"
 import { AuthContext } from "../context/AuthContext"
-import NeedLoginAlert from "../components/NeedLoginAlert"
 import { getAccessToken } from "../services/googleCalendarService"
 import CalendarioTurno from "../components/CalendarioTurno"
 import { useNavigate } from "react-router-dom"
@@ -30,10 +29,6 @@ const CrearNegocio = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const navigate = useNavigate()
-
-  if (!user) {
-    return <NeedLoginAlert />
-  }
 
   const handleChange = (e) => {
     const { name, value, files } = e.target

@@ -1,6 +1,5 @@
 "use client"
 import { Link, useNavigate } from "react-router-dom"
-import NeedLoginAlert from "../components/NeedLoginAlert"
 import { useAuth } from "../hooks/useAuth"
 import { Button, Card, Container, Row, Col } from "react-bootstrap"
 import "../css/MainPage.css"
@@ -11,9 +10,18 @@ const MainPage = () => {
 
   const handleCreateBusiness = () => {
     if (!isAuthenticated) {
+      navigate("/login")
       return
     }
     navigate("/crear-negocio")
+  }
+
+  const handleReservarTurno = () => {
+    if (!isAuthenticated) {
+      navigate("/login")
+      return
+    }
+    navigate("/reservar-turno")
   }
 
   return (
@@ -49,13 +57,11 @@ const MainPage = () => {
                   variant="outline-primary"
                   size="lg"
                   className="rounded-pill fw-bold px-4"
-                  as={Link}
-                  to="/reservar-turno"
+                  onClick={handleReservarTurno}
                 >
                   <i className="bi bi-calendar-check me-2"></i> Reservar turno
                 </Button>
               </div>
-              {/* {!isAuthenticated && <NeedLoginAlert className="mt-3" />} */}
             </Col>
             <Col lg={6} className="text-center">
              
@@ -118,7 +124,6 @@ const MainPage = () => {
               <Button variant="primary" size="lg" className="rounded-pill fw-bold px-5" onClick={handleCreateBusiness}>
                 Comenzar ahora
               </Button>
-              {/* {!isAuthenticated && <NeedLoginAlert className="mt-3" />} */}
             </Card.Body>
           </Card>
         </Container>
@@ -155,7 +160,7 @@ const MainPage = () => {
             <Col md={4}>
               <h5 className="fw-bold mb-3">Contáctanos</h5>
               <p className="mb-0">
-                <i className="bi bi-envelope me-2"></i> info@reservaturnos.com
+                <i className="bi bi-envelope me-2"></i> reservaturnosapp@gmail.com
                 <br />
                 <i className="bi bi-telephone me-2"></i> +123 456 7890
               </p>
