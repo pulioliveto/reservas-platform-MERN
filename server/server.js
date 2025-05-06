@@ -43,7 +43,8 @@ const io = new SocketIOServer(server, {
     origin: [
       'http://localhost:3000',
       'https://front-production-437f.up.railway.app',
-      'https://reservas-platform-mern-production.up.railway.app' // <-- Agregado dominio de Railway frontend
+      'https://reservas-platform-mern-production.up.railway.app',
+      'https://reservaturno-djx5bwq65-puliolivetos-projects.vercel.app/' // <-- Agregado dominio de Railway frontend
     ],
     methods: ['GET', 'POST'],
     credentials: true
@@ -81,7 +82,8 @@ server.listen(PORT, () => { console.log(`Servidor corriendo en el puerto ${PORT}
 const allowedOrigins = [
   'http://localhost:3000',
   'https://front-production-437f.up.railway.app',
-  'https://reservas-platform-mern-production.up.railway.app' // <-- Agregado dominio de Railway frontend
+  'https://reservas-platform-mern-production.up.railway.app',
+  'https://reservaturno-djx5bwq65-puliolivetos-projects.vercel.app/' // <-- Agregado dominio de Railway frontend
 ];
 app.use(cors({
   origin: allowedOrigins,
