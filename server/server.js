@@ -45,7 +45,8 @@ const io = new SocketIOServer(server, {
       'https://front-production-437f.up.railway.app',
       'https://reservas-platform-mern-production.up.railway.app',
       'https://reservaturno-djx5bwq65-puliolivetos-projects.vercel.app/',
-      'https://v0-saa-s-reservaturnos.vercel.app'
+      'https://v0-saa-s-reservaturnos.vercel.app',
+      'https://reservaturnos.vercel.app'
     ],
     methods: ['GET', 'POST'],
     credentials: true
@@ -84,7 +85,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://front-production-437f.up.railway.app',
   'https://reservas-platform-mern-production.up.railway.app',
-  'https://v0-saa-s-reservaturnos.vercel.app'
+  'https://v0-saa-s-reservaturnos.vercel.app',
+  'https://reservaturnos.vercel.app'
 ];
 app.use(cors({
   origin: allowedOrigins,
