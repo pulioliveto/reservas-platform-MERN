@@ -90,7 +90,13 @@ app.use(cors({
 }));
 
 // Inicialización de Firebase Admin SDK usando variable de entorno
-const serviceAccount = JSON.parse(fs.readFileSync('./config/serviceAccountKey.json', 'utf8'));
+let serviceAccount;
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+} else {
+  // Solo para desarrollo local, si existe el archivo
+  serviceAccount = JSON.parse(fs.readFileSync('./config/serviceAccountKey.json', 'utf8'));
+}
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
