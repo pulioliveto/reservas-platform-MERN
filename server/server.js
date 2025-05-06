@@ -25,6 +25,13 @@ const app = express();
 
 dotenv.config();
 
+
+// Crear la carpeta 'uploads' si no existe
+const uploadsDir = path.join(process.cwd(), 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+
 // Sirve la carpeta "uploads" para acceso público
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
