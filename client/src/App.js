@@ -16,6 +16,8 @@ import { AuthContext } from "./context/AuthContext";
 import DetalleNegocio from './pages/DetalleNegocio';
 import MisTurnos from './pages/MisTurnos';
 import ComoFunciona from './pages/ComoFunciona.jsx';
+import Terminos from "./pages/Terminos";
+import Privacidad from "./pages/Privacidad";
 
 function App() {
   const { loading } = useContext(AuthContext);
@@ -42,6 +44,8 @@ function App() {
         <Route path="/negocio/:id" element={<DetalleNegocio />} />
         <Route path="/mis-turnos" element={<MisTurnos />} />
         <Route path="/como-funciona" element={<ComoFunciona />} />
+        <Route path="/terminos" element={<Terminos />} />
+        <Route path="/privacidad" element={<Privacidad />} />
       </Routes>
       <ToastContainer />
     </Router>
