@@ -19,36 +19,10 @@ const NotificationDropdown = ({ notifications, onMarkRead, onClearAll, onClose }
     }
   }
 
-  // Función para formatear el mensaje con etiquetas para "Reservó" y "Canceló"
-  const formatMessage = (message) => {
-    // Buscar el nombre del cliente (asumimos que está al principio del mensaje)
-    const clientNameMatch = message.match(/^([^,]+),/)
-
-    if (!clientNameMatch) {
-      // Si no hay coincidencia, devolver el mensaje original
-      return formatActionLabels(message)
-    }
-
-    const clientName = clientNameMatch[1]
-    const restOfMessage = message.substring(clientName.length + 1) // +1 por la coma
-
-    return (
-      <>
-        <span className="client-name">{clientName}</span>
-        {formatActionLabels(restOfMessage)}
-      </>
-    )
-  }
-
   // Función para formatear las etiquetas de acción (Reservó/Canceló)
   const formatActionLabels = (text) => {
-    // Reemplazar "Reservó" con una etiqueta
     let formattedText = text.replace(/\b(Reservó)\b/g, '<span class="action-label reserved">Reservó</span>')
-
-    // Reemplazar "Canceló" con una etiqueta
     formattedText = formattedText.replace(/\b(Canceló)\b/g, '<span class="action-label canceled">Canceló</span>')
-
-    // Devolver el texto con HTML
     return <span dangerouslySetInnerHTML={{ __html: formattedText }} />
   }
 
@@ -95,7 +69,11 @@ const NotificationDropdown = ({ notifications, onMarkRead, onClearAll, onClose }
               onClick={() => onMarkRead(notif._id)}
             >
               <div className="notification-content">
-                <p className="notification-message">{formatMessage(notif.message)}</p>
+                <p className="notification-message">
+                  <span className="client-name">{notif.clienteNombre || notif.clientName}</span>
+                  {" "}
+                  {formatActionLabels(notif.message.replace(/^([^,]+),/, ""))}
+                </p>
                 <span className="notification-time">{formatDate(notif.createdAt)}</span>
               </div>
               {!notif.read && (

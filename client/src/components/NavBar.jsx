@@ -22,10 +22,11 @@ const Navbar = () => {
   const userDropdownRef = React.useRef(null)
 
   useEffect(() => {
-    if (!user && location.pathname !== "/login") {
-      navigate("/") // Redirige al home si el usuario no está autenticado y no está en la página de login
+    const publicRoutes = ["/login", "/privacidad", "/terminos"];
+    if (!user && !publicRoutes.includes(location.pathname)) {
+      navigate("/");
     }
-  }, [user, navigate, location.pathname]) // Ejecuta el efecto cuando cambia el estado del usuario o la ubicación
+  }, [user, navigate, location.pathname]);
 
   useEffect(() => {
     const fetchBusinesses = async () => {
@@ -173,7 +174,7 @@ const Navbar = () => {
         <BootstrapNavbar.Brand as={Link} to="/" className="d-flex align-items-center">
           <img src={logo || "/placeholder.svg"} alt="ReservaTurnos" height="50" className="me-2" />
         </BootstrapNavbar.Brand>
-
+        
     
         {user && (
           <>

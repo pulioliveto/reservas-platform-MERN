@@ -108,7 +108,7 @@ const ClientesTab = ({ loadingReservas, errorReservas, reservas }) => {
                     setShowModal(true);
                   }}
                 >
-                  <td>{r.clienteNombre || r.clienteId || "-"}</td>
+                  <td>{r.user?.name || r.clienteNombre || r.clienteId || "-"}</td>
                   <td>{new Date(r.fecha).toLocaleDateString()}</td>
                   <td>{r.turno}</td>
                 </tr>
@@ -126,7 +126,7 @@ const ClientesTab = ({ loadingReservas, errorReservas, reservas }) => {
         <Modal.Body>
           {selectedCliente && (
             <>
-              <p><strong>Nombre:</strong> {selectedCliente.clienteNombre || "-"}</p>
+              <p><strong>Nombre:</strong> {selectedCliente.user?.name || selectedCliente.clienteNombre || "-"}</p>
               <p><strong>DNI:</strong> {selectedCliente.dni || "-"}</p>
               <p><strong>Correo electrónico:</strong> {selectedCliente.email || "-"}</p>
               <p><strong>Teléfono:</strong> {selectedCliente.telefono || "-"}</p>

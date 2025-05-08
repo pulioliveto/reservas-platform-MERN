@@ -36,6 +36,8 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
+      <Route path="/terminos" element={<Terminos />} />
+      <Route path="/privacidad" element={<Privacidad />} />
         <Route path="/" element={<MainPage/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/crear-negocio" element={<CrearNegocio />} />
@@ -44,8 +46,7 @@ function App() {
         <Route path="/negocio/:id" element={<DetalleNegocio />} />
         <Route path="/mis-turnos" element={<MisTurnos />} />
         <Route path="/como-funciona" element={<ComoFunciona />} />
-        <Route path="/terminos" element={<Terminos />} />
-        <Route path="/privacidad" element={<Privacidad />} />
+        
       </Routes>
       <ToastContainer />
     </Router>

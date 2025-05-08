@@ -146,15 +146,22 @@ const MainPage = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/precios" className="text-white text-decoration-none">
-                    Precios
-                  </Link>
-                </li>
-                <li>
                   <Link to="/contacto" className="text-white text-decoration-none">
                     Contacto
                   </Link>
                 </li>
+                
+                <li>
+                  <Link to="/terminos" className="text-white text-decoration-none">
+                    Terminos
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/privacidad" className="text-white text-decoration-none">
+                    Privacidad
+                  </Link>
+                </li>
+                
               </ul>
             </Col>
             <Col md={4}>
