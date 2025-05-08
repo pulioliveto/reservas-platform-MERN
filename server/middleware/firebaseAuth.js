@@ -8,10 +8,7 @@ export const auth = async (req, res, next) => {
   }
 
   try {
-    // Verificar el token
-    console.log('token', token)
     const decodedToken = await admin.auth().verifyIdToken(token);
-    console.log('Token decodificado:', decodedToken);
     req.user = {
       uid: decodedToken.uid,
       name: decodedToken.name || 'sin nombre',

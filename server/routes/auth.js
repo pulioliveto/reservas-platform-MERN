@@ -7,17 +7,19 @@ const router = express.Router();
 // Ruta para registrar o autenticar usuarios con Google
 router.post('/login', auth, async (req, res) => {
   const { uid, name, email } = req.user; // Información obtenida del middleware
+  console.log("LLEGA A /API/aUTH/LOGIN");
+  console.log("Intentando loguear/registrar usuario:", uid, name, email);
 
   try {
     // Verificar si el usuario ya existe en la base de datos
-    let user = await User.findOne({ googleId: uid });
+    let user = await User.findOne({ uid });
 
     if (!user) {
       // Si no existe, lo creamos
       user = new User({
-        googleId: uid,
-        name: name,
-        email: email,
+        uid,
+        name,
+        email,
       });
       await user.save();
     }

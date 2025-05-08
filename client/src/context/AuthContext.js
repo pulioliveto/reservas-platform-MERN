@@ -9,6 +9,8 @@ import {
   browserSessionPersistence 
 } from "firebase/auth";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -54,6 +56,17 @@ export const AuthProvider = ({ children }) => {
   const signInWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      // Llamada al backend para registrar el usuario en MongoDB
+      const token = await user.getIdToken();
+      await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      // Lógica para Google Calendar
       const accessToken = result.credential ? result.credential.accessToken : null;
 
       if (accessToken) {

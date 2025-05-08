@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  googleId: {
+  uid: { // Cambiado de googleId a uid
     type: String,
     required: true,
     unique: true,
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['client', 'admin'], // Cliente o Administrador
+    enum: ['client', 'admin'],
     default: 'client',
   },
   createdAt: {

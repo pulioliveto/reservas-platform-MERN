@@ -4,6 +4,7 @@ import Reservation from '../models/Reservation.js';
 const createReservation = async (req, res) => {
   const { businessId, date, time, dni, telefono, email } = req.body;
   const userId = req.user.id;  // Obtener el id del usuario desde el token
+  const userName = req.user.name; // Obtener el nombre del usuario desde el token
 
   try {
     const newReservation = new Reservation({
@@ -14,6 +15,7 @@ const createReservation = async (req, res) => {
       dni,
       telefono,
       email,
+      clienteNombre: userName, // Asignar el nombre del cliente
     });
 
     await newReservation.save();
@@ -30,7 +32,8 @@ const getUserReservations = async (req, res) => {
 
   try {
     const reservations = await Reservation.find({ user: userId })
-      .populate('business')  // Para obtener los detalles del negocio
+      .populate('business')
+      .populate('user', 'name email')
       .exec();
     res.status(200).json(reservations);
   } catch (error) {
