@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { addDays, format, isBefore, startOfDay } from "date-fns"
 import { es } from "date-fns/locale"
-import { FaLock, FaExclamationTriangle } from "react-icons/fa"
+import { FaLock, FaExclamationTriangle, FaChevronLeft, FaChevronRight, FaCalendarAlt } from "react-icons/fa"
 import "../css/CalendarioDias.css"
 
 const CalendarioDias = ({ onSelectDay, getDayStatus, initialDate }) => {
@@ -43,15 +43,18 @@ const CalendarioDias = ({ onSelectDay, getDayStatus, initialDate }) => {
   return (
     <div className="calendario-dias">
       <div className="calendario-header">
-        <button className="btn-calendar" onClick={handlePrevWeek}>
-          <i className="bi bi-chevron-left"></i>
+        <button className="btn-calendar" onClick={handlePrevWeek} aria-label="Semana anterior">
+          <FaChevronLeft />
         </button>
         <div className="calendario-title-container">
           <h3 className="calendario-title">{format(startDay, "MMMM yyyy", { locale: es })}</h3>
-          <p className="calendario-current-date">Hoy: {currentDateFormatted}</p>
+          <div className="calendario-current-date">
+            <FaCalendarAlt className="me-2" />
+            <span>Hoy: {currentDateFormatted}</span>
+          </div>
         </div>
-        <button className="btn-calendar" onClick={handleNextWeek}>
-          <i className="bi bi-chevron-right"></i>
+        <button className="btn-calendar" onClick={handleNextWeek} aria-label="Semana siguiente">
+          <FaChevronRight />
         </button>
       </div>
       <div className="calendario-dias-grid">
@@ -88,6 +91,18 @@ const CalendarioDias = ({ onSelectDay, getDayStatus, initialDate }) => {
                   onSelectDay(day)
                 }
               }}
+              aria-label={`${format(day, "EEEE d", { locale: es })}, ${
+                status === "cerrado"
+                  ? "cerrado"
+                  : status === "ocupado"
+                    ? "sin turnos disponibles"
+                    : status === "pocos"
+                      ? "pocos turnos disponibles"
+                      : "disponible"
+              }`}
+              aria-selected={isSelected}
+              role="button"
+              tabIndex={0}
             >
               <div className="dia-content">
                 <p className="dia-nombre">{format(day, "EEE", { locale: es })}</p>

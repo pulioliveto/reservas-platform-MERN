@@ -1,0 +1,236 @@
+/* Estilos para la pestaña de Clientes */
+
+/* Estilos para el contenedor de búsqueda */
+.clientes-tab .search-container {
+    width: 280px;
+  }
+  
+  /* Estilos para la tabla de clientes */
+  .clientes-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .clientes-table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .clientes-table tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+  }
+  
+  .cliente-row {
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .cliente-row:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .cliente-row:last-child td {
+    border-bottom: none;
+  }
+  
+  /* Estilos para el avatar del cliente */
+  .cliente-avatar {
+    width: 36px;
+    height: 36px;
+    background-color: #e9ecef;
+    color: #6c757d;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Estilos para las badges */
+  .empleado-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background-color: #e9ecef;
+    color: #4a6bff;
+    border-radius: 50%;
+  }
+  
+  .fecha-badge,
+  .turno-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #495057;
+  }
+  
+  /* Estilos para el modal de cliente */
+  .cliente-modal .modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cliente-modal .modal-header {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .cliente-modal .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .cliente-modal .modal-title {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .modal-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #f0f4ff;
+    color: #4a6bff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Estilos para la información del cliente */
+  .cliente-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .info-section {
+    background-color: #f8faff;
+    border-radius: 10px;
+    padding: 1.25rem;
+  }
+  
+  .section-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .info-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #e9ecef;
+    color: #4a6bff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+  }
+  
+  .info-content {
+    flex: 1;
+  }
+  
+  .info-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+  }
+  
+  .info-value {
+    font-weight: 500;
+    color: #333;
+  }
+  
+  /* Estilos para el historial */
+  .historial-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .historial-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: white;
+    padding: 0.75rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .historial-fecha,
+  .historial-hora {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #495057;
+  }
+  
+  .historial-empleado {
+    display: inline-flex;
+    align-items: center;
+    margin-left: auto;
+    font-weight: normal;
+    font-size: 0.8rem;
+  }
+  
+  /* Estilos para los estados vacíos */
+  .empty-results-icon {
+    width: 80px;
+    height: 80px;
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 767.98px) {
+    .clientes-tab .search-container {
+      width: 100%;
+    }
+  
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .historial-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  
+    .historial-empleado {
+      margin-left: 0;
+    }
+  }
+  

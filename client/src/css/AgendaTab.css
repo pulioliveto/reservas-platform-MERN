@@ -1,20 +1,51 @@
+/* Estilos para la pestaña de Agenda */
+
+.agenda-tab {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Estilos para el encabezado */
+.agenda-header {
+  margin-bottom: 1.5rem;
+}
+
+.agenda-info {
+  display: flex;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background-color: #f0f9ff;
+  border-radius: 8px;
+  color: #0c5460;
+  font-size: 0.9rem;
+}
+
 /* Estilos para la leyenda del calendario */
 .calendario-legend {
   background-color: white;
-  border-radius: 8px;
-  padding: 0.75rem;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.legend-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  margin-right: 1rem;
 }
 
 .legend-color {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 4px;
   margin-right: 0.5rem;
 }
@@ -40,8 +71,9 @@
 }
 
 .legend-text {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #495057;
+  font-weight: 500;
 }
 
 /* Estilos para el contenedor del calendario */
@@ -50,11 +82,24 @@
   border-radius: 12px;
   overflow: hidden;
   width: 100%;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos para el contenedor de horarios */
+.horarios-container {
+  width: 100%;
 }
 
 /* Estilos para los horarios disponibles */
 .time-slot-btn {
   transition: all 0.2s ease;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 500;
 }
 
 .time-slot-available {
@@ -70,31 +115,30 @@
   color: white;
 }
 
+.time-slot-occupied {
+  background-color: #f8f9fa;
+  color: #adb5bd;
+  border: 1px solid #e9ecef;
+  cursor: not-allowed;
+}
+
 /* Estilos responsivos */
-@media (max-width: 576px) {
-  .calendario-legend {
-    padding: 0.5rem;
-    margin-bottom: 0.75rem;
+@media (max-width: 767.98px) {
+  .legend-container {
+    gap: 0.75rem;
   }
 
   .legend-item {
     margin-bottom: 0.25rem;
-    margin-right: 0.5rem;
   }
 
   .legend-text {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
 
   .legend-color {
-    width: 12px;
-    height: 12px;
+    width: 16px;
+    height: 16px;
     margin-right: 0.3rem;
-  }
-
-  /* Ajustar el espaciado en móviles */
-  .w-100 h5.fw-bold.mb-4 {
-    font-size: 1rem;
-    margin-bottom: 0.75rem !important;
   }
 }

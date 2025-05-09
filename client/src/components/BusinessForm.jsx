@@ -1,7 +1,7 @@
 "use client"
 import { Form, Row, Col, InputGroup } from "react-bootstrap"
 import { FaFacebook, FaInstagram, FaYoutube, FaGlobe, FaBuilding, FaMapMarkerAlt, FaTag } from "react-icons/fa"
-import PhoneInputWhatsApp from "./PhoneInputWhatsApp"
+
 
 const BusinessForm = ({ formData, handleChange, handlePhoneChange }) => (
   <div className="business-form">

@@ -1,76 +1,107 @@
-import { useState, useMemo } from "react";
-import { Modal, Button } from "react-bootstrap";
-import { FaSearch, FaSort, FaSortUp, FaSortDown, FaUserClock } from "react-icons/fa";
+"use client"
+
+import { useState, useMemo } from "react"
+import { Modal, Button, Form, InputGroup, Table, Badge, Spinner } from "react-bootstrap"
+import {
+  FaSearch,
+  FaSort,
+  FaSortUp,
+  FaSortDown,
+  FaUserClock,
+  FaUser,
+  FaIdCard,
+  FaEnvelope,
+  FaPhone,
+  FaHistory,
+  FaCalendarAlt,
+  FaClock,
+  FaUserTie,
+  FaTimes,
+} from "react-icons/fa"
+import "../css/ClientesTab.css"
 
 const ClientesTab = ({ loadingReservas, errorReservas, reservas }) => {
-  const [search, setSearch] = useState("");
-  const [order, setOrder] = useState("desc"); // 'desc' = más recientes primero
-  const [selectedCliente, setSelectedCliente] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [search, setSearch] = useState("")
+  const [order, setOrder] = useState("desc") // 'desc' = más recientes primero
+  const [selectedCliente, setSelectedCliente] = useState(null)
+  const [showModal, setShowModal] = useState(false)
 
   const filteredReservas = useMemo(() => {
-    let res = reservas;
+    let res = reservas
     if (search.trim() !== "") {
-      const s = search.trim().toLowerCase();
-      res = res.filter((r) => (r.clienteNombre || "").toLowerCase().includes(s));
+      const s = search.trim().toLowerCase()
+      res = res.filter(
+        (r) =>
+          (r.clienteNombre || "").toLowerCase().includes(s) ||
+          (r.email || "").toLowerCase().includes(s) ||
+          (r.dni || "").toLowerCase().includes(s) ||
+          (r.telefono || "").toLowerCase().includes(s),
+      )
     }
     res = [...res].sort((a, b) => {
-      const dateA = new Date(a.fecha);
-      const dateB = new Date(b.fecha);
-      return order === "desc" ? dateB - dateA : dateA - dateB;
-    });
-    return res;
-  }, [reservas, search, order]);
+      const dateA = new Date(a.fecha)
+      const dateB = new Date(b.fecha)
+      return order === "desc" ? dateB - dateA : dateA - dateB
+    })
+    return res
+  }, [reservas, search, order])
 
-  const toggleOrder = () => setOrder(order === "desc" ? "asc" : "desc");
+  const toggleOrder = () => setOrder(order === "desc" ? "asc" : "desc")
 
   // Historial de turnos del cliente seleccionado
   const historial = useMemo(() => {
-    if (!selectedCliente) return [];
+    if (!selectedCliente) return []
     return reservas.filter(
       (r) =>
         (selectedCliente.clienteId && r.clienteId === selectedCliente.clienteId) ||
-        (selectedCliente.email && r.email === selectedCliente.email)
-    );
-  }, [selectedCliente, reservas]);
-
-
-  console.log("Reservas en ClientesTab:", reservas);
+        (selectedCliente.email && r.email === selectedCliente.email),
+    )
+  }, [selectedCliente, reservas])
 
   return (
-    <div className="w-100">
+    <div className="clientes-tab">
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
         <h5 className="fw-bold mb-3 mb-md-0 d-flex align-items-center">
           <FaUserClock className="me-2 text-primary" /> Clientes y Reservas
         </h5>
         <div className="search-container">
-          <div className="input-group">
-            <span className="input-group-text bg-light border-end-0">
+          <InputGroup>
+            <InputGroup.Text className="bg-light border-end-0">
               <FaSearch className="text-muted" />
-            </span>
-            <input
+            </InputGroup.Text>
+            <Form.Control
               type="text"
-              className="form-control border-start-0 ps-0"
               placeholder="Buscar cliente..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               aria-label="Buscar cliente"
+              className="border-start-0 ps-0"
             />
-          </div>
+            {search && (
+              <InputGroup.Text className="bg-white border-start-0 pe-3">
+                <Button
+                  variant="link"
+                  className="p-0 text-muted"
+                  onClick={() => setSearch("")}
+                  aria-label="Limpiar búsqueda"
+                >
+                  <FaTimes />
+                </Button>
+              </InputGroup.Text>
+            )}
+          </InputGroup>
         </div>
       </div>
 
       {loadingReservas ? (
         <div className="text-center py-5">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Cargando...</span>
-          </div>
+          <Spinner animation="border" variant="primary" />
           <p className="mt-3 text-muted">Cargando reservas...</p>
         </div>
       ) : errorReservas ? (
-        <div className="alert alert-danger">
-          <FaSearch className="me-2" />
-          {errorReservas}
+        <div className="alert alert-danger d-flex align-items-center">
+          <FaSearch className="me-2 flex-shrink-0" />
+          <div>{errorReservas}</div>
         </div>
       ) : filteredReservas.length === 0 ? (
         <div className="text-center py-5">
@@ -82,10 +113,11 @@ const ClientesTab = ({ loadingReservas, errorReservas, reservas }) => {
         </div>
       ) : (
         <div className="table-responsive">
-          <table className="table table-hover">
+          <Table hover className="clientes-table">
             <thead className="table-light">
               <tr>
                 <th>Nombre del Cliente</th>
+                <th>Empleado</th>
                 <th style={{ cursor: "pointer", userSelect: "none" }} onClick={toggleOrder} className="sortable-header">
                   <div className="d-flex align-items-center">
                     Fecha
@@ -105,59 +137,152 @@ const ClientesTab = ({ loadingReservas, errorReservas, reservas }) => {
               {filteredReservas.map((r) => (
                 <tr
                   key={r._id}
-                  style={{ cursor: "pointer" }}
+                  className="cliente-row"
                   onClick={() => {
-                    setSelectedCliente(r);
-                    setShowModal(true);
+                    setSelectedCliente(r)
+                    setShowModal(true)
                   }}
                 >
-                  <td>{r.clienteNombre || "-"}</td>
-                  <td>{new Date(r.fecha).toLocaleDateString()}</td>
-                  <td>{r.turno}</td>
+                  <td>
+                    <div className="d-flex align-items-center">
+                      <div className="cliente-avatar">
+                        <FaUser />
+                      </div>
+                      <div className="ms-2 fw-medium">{r.clienteNombre || "-"}</div>
+                    </div>
+                  </td>
+                  <td>
+                    {r.empleadoNombre ? (
+                      <div className="d-flex align-items-center">
+                        <div className="empleado-badge">
+                          <FaUserTie size={12} />
+                        </div>
+                        <span className="ms-1">{r.empleadoNombre}</span>
+                      </div>
+                    ) : (
+                      <span className="text-muted">-</span>
+                    )}
+                  </td>
+                  <td>
+                    <div className="fecha-badge">
+                      <FaCalendarAlt className="me-1" size={12} />
+                      {new Date(r.fecha).toLocaleDateString()}
+                    </div>
+                  </td>
+                  <td>
+                    <div className="turno-badge">
+                      <FaClock className="me-1" size={12} />
+                      {r.turno}
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
-          </table>
+          </Table>
         </div>
       )}
 
       {/* Modal de información del cliente */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered className="cliente-modal">
         <Modal.Header closeButton>
-          <Modal.Title>Información del Cliente</Modal.Title>
+          <Modal.Title className="d-flex align-items-center">
+            <div className="modal-icon me-2">
+              <FaUser />
+            </div>
+            Información del Cliente
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedCliente && (
-            <>
-              <p><strong>Nombre:</strong> {selectedCliente.user?.name || selectedCliente.clienteNombre || "-"}</p>
-              <p><strong>DNI:</strong> {selectedCliente.dni || "-"}</p>
-              <p><strong>Correo electrónico:</strong> {selectedCliente.email || "-"}</p>
-              <p><strong>Teléfono:</strong> {selectedCliente.telefono || "-"}</p>
-              <hr />
-              <h6>Historial de turnos:</h6>
-              {historial.length === 0 ? (
-                <p className="text-muted">Sin historial de turnos.</p>
-              ) : (
-                <ul className="list-unstyled">
-                  {historial.map((h) => (
-                    <li key={h._id} className="mb-2">
-                      <span className="badge bg-primary me-2">{new Date(h.fecha).toLocaleDateString()}</span>
-                      <span>Turno: <strong>{h.turno}</strong></span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </>
+            <div className="cliente-info">
+              <div className="info-section">
+                <h6 className="section-title">Datos personales</h6>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <FaUser />
+                    </div>
+                    <div className="info-content">
+                      <div className="info-label">Nombre</div>
+                      <div className="info-value">
+                        {selectedCliente.user?.name || selectedCliente.clienteNombre || "-"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <FaIdCard />
+                    </div>
+                    <div className="info-content">
+                      <div className="info-label">DNI</div>
+                      <div className="info-value">{selectedCliente.dni || "-"}</div>
+                    </div>
+                  </div>
+
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <FaEnvelope />
+                    </div>
+                    <div className="info-content">
+                      <div className="info-label">Email</div>
+                      <div className="info-value">{selectedCliente.email || "-"}</div>
+                    </div>
+                  </div>
+
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <FaPhone />
+                    </div>
+                    <div className="info-content">
+                      <div className="info-label">Teléfono</div>
+                      <div className="info-value">{selectedCliente.telefono || "-"}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="info-section">
+                <h6 className="section-title d-flex align-items-center">
+                  <FaHistory className="me-2" />
+                  Historial de turnos
+                </h6>
+                {historial.length === 0 ? (
+                  <p className="text-muted">Sin historial de turnos.</p>
+                ) : (
+                  <div className="historial-list">
+                    {historial.map((h) => (
+                      <div key={h._id} className="historial-item">
+                        <div className="historial-fecha">
+                          <FaCalendarAlt className="me-1" size={12} />
+                          {new Date(h.fecha).toLocaleDateString()}
+                        </div>
+                        <div className="historial-hora">
+                          <FaClock className="me-1" size={12} />
+                          {h.turno}
+                        </div>
+                        {h.empleadoNombre && (
+                          <Badge bg="light" text="dark" className="historial-empleado">
+                            <FaUserTie className="me-1" size={10} />
+                            {h.empleadoNombre}
+                          </Badge>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button variant="primary" onClick={() => setShowModal(false)}>
             Cerrar
           </Button>
         </Modal.Footer>
       </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default ClientesTab;
+export default ClientesTab

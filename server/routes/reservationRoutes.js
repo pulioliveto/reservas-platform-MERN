@@ -8,7 +8,7 @@ import { notifyReserva, notifyCancelacion, getAdminNotifications, markNotificati
 const router = express.Router();
 
 router.post("/", auth, async (req, res) => {
-  const { negocioId, turno, fecha, dni, telefono, email } = req.body;
+  const { negocioId, turno, fecha, dni, telefono, email, empleadoId } = req.body;
   const clienteId = req.user.uid; // <-- del token
   const clienteNombre = req.user.name || "Sin nombre"; // <-- del token
 
@@ -38,6 +38,7 @@ router.post("/", auth, async (req, res) => {
       dni,
       telefono,
       email,
+      empleadoNombre: empleadoId, // <-- Agregá esto
       isAvailable: false,
     });
 

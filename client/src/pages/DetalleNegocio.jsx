@@ -14,6 +14,7 @@ import ContactoTab from "../components/ContactoTab"
 import ClientesTab from "../components/ClientesTab"
 import EditarContacto from "../components/EditarContacto"
 import { FaPen, FaMapMarkerAlt, FaPhone, FaCalendarAlt, FaUsers, FaInfoCircle } from "react-icons/fa"
+import PersonalTab from "../components/PersonalTab"; // Asegurate que el nombre coincida con tu archivo
 
 const DetalleNegocio = () => {
   const { id } = useParams()
@@ -32,6 +33,7 @@ const DetalleNegocio = () => {
   const [activeTab, setActiveTab] = useState("agenda")
   const [editandoContacto, setEditandoContacto] = useState(false)
   const [editLoading, setEditLoading] = useState(false)
+  const [empleados, setEmpleados] = useState([]);
 
   // Mapeo de días con todas las variantes posibles
   const DAYS_MAP = [
@@ -199,6 +201,27 @@ const DetalleNegocio = () => {
     fetchReservas()
   }, [isOwner, business])
 
+  const fetchEmpleados = useCallback(async () => {
+    if (!business?._id) return;
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : null;
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/empleados/${business._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return setEmpleados([]);
+      const data = await res.json();
+      setEmpleados(data);
+    } catch {
+      setEmpleados([]);
+    }
+  }, [business]);
+
+  useEffect(() => {
+    fetchEmpleados();
+  }, [fetchEmpleados]);
+
   // Cambia la pestaña activa según el query param 'tab'
   useEffect(() => {
     const params = new URLSearchParams(location.search)
@@ -230,7 +253,7 @@ const DetalleNegocio = () => {
   }
 
   // Confirmar reserva
-  const handleReservationConfirm = async ({dni, telefono, email, selectedSlot}) => {
+  const handleReservationConfirm = async ({dni, telefono, email, selectedSlot, empleadoId}) => {
     try {
       const auth = getAuth()
       const user = auth.currentUser
@@ -245,6 +268,7 @@ const DetalleNegocio = () => {
         dni,
         telefono,
         email,
+        empleadoId, // <-- nuevo campo
       })
 
       // Actualizar disponibilidad del slot
@@ -425,15 +449,26 @@ const DetalleNegocio = () => {
                 </button>
               </li>
               {isOwner && (
-                <li className="nav-item">
-                  <button
-                    className={`nav-link ${activeTab === "clientes" ? "active" : ""}`}
-                    onClick={() => setActiveTab("clientes")}
-                  >
-                    <FaUsers className="me-2" />
-                    Clientes
-                  </button>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <button
+                      className={`nav-link ${activeTab === "clientes" ? "active" : ""}`}
+                      onClick={() => setActiveTab("clientes")}
+                    >
+                      <FaUsers className="me-2" />
+                      Clientes
+                    </button>
+                  </li>
+                  <li className="nav-item">
+                    <button
+                      className={`nav-link ${activeTab === "personal" ? "active" : ""}`}
+                      onClick={() => setActiveTab("personal")}
+                    >
+                      <FaUsers className="me-2" />
+                      Personal
+                    </button>
+                  </li>
+                </>
               )}
             </ul>
           </div>
@@ -478,6 +513,10 @@ const DetalleNegocio = () => {
             {activeTab === "clientes" && isOwner && (
               <ClientesTab loadingReservas={loadingReservas} errorReservas={errorReservas} reservas={reservas} />
             )}
+
+            {activeTab === "personal" && isOwner && (
+              <PersonalTab negocioId={business._id} onEmpleadosChange={fetchEmpleados} />
+            )}
           </div>
         </div>
       </div>
@@ -491,6 +530,7 @@ const DetalleNegocio = () => {
           business={business}
           onConfirm={handleReservationConfirm}
           user={user}
+          empleados={empleados} // <-- pasa la lista de empleados
         />
       )}
     </div>

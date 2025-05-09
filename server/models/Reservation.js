@@ -10,6 +10,7 @@ const reservationSchema = new mongoose.Schema({
   telefono: { type: Number, required: true },
   email: { type: String, required: true },
   isAvailable: { type: Boolean, default: true },
+  empleadoNombre: { type: String }, // No required, opcional
 });
 
 export default mongoose.model("Reservation", reservationSchema);

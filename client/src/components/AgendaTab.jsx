@@ -1,5 +1,6 @@
+import { FaCalendarAlt, FaInfoCircle } from "react-icons/fa"
 import CalendarioDias from "./CalendarioDias"
-import '../css/AgendaTab.css'
+import "../css/AgendaTab.css"
 
 const AgendaTab = ({ selectedDay, setSelectedDay, getDaySchedule, renderDayInfo }) => {
   // Función para determinar el estado del día
@@ -27,11 +28,20 @@ const AgendaTab = ({ selectedDay, setSelectedDay, getDaySchedule, renderDayInfo 
   }
 
   return (
-    <div className="w-100">
-      <h5 className="fw-bold mb-4">Selecciona un día para ver los horarios disponibles</h5>
+    <div className="agenda-tab">
+      <div className="agenda-header">
+        <h5 className="fw-bold d-flex align-items-center">
+          <FaCalendarAlt className="me-2 text-primary" />
+          Selecciona un día para ver los horarios disponibles
+        </h5>
+        <div className="agenda-info">
+          <FaInfoCircle className="me-2 text-primary" />
+          <span>Selecciona un día disponible para ver y reservar turnos</span>
+        </div>
+      </div>
 
-      <div className="calendario-legend mb-3">
-        <div className="d-flex flex-wrap gap-3 justify-content-center">
+      <div className="calendario-legend">
+        <div className="legend-container">
           <div className="legend-item">
             <span className="legend-color legend-abierto"></span>
             <span className="legend-text">Disponible</span>
@@ -51,11 +61,11 @@ const AgendaTab = ({ selectedDay, setSelectedDay, getDaySchedule, renderDayInfo 
         </div>
       </div>
 
-      <div className="calendar-container mb-4">
+      <div className="calendar-container">
         <CalendarioDias onSelectDay={setSelectedDay} getDayStatus={getDayStatus} initialDate={selectedDay} />
       </div>
 
-      {renderDayInfo()}
+      <div className="horarios-container">{renderDayInfo()}</div>
     </div>
   )
 }

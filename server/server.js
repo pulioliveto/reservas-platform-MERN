@@ -15,6 +15,7 @@ import calendarRoutes from './routes/calendarRoutes.js';
 import fs from 'fs';
 import { Server as SocketIOServer } from 'socket.io';
 import http from 'http';
+import employeeRoutes from './routes/employeeRoutes.js';
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -129,6 +130,7 @@ app.use(passport.session());
 // Usar rutas API 
 app.use('/api/businesses', businessRoutes);
 app.use('/api/turnos', reservationRoutes);
+app.use('/api/empleados', employeeRoutes);
 
 //Ruta para login con Auth 
 app.use('/api/auth', authRoutes);

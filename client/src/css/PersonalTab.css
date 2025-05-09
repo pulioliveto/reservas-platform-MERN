@@ -1,0 +1,200 @@
+/* Estilos para la pestaña de Personal */
+
+/* Estilos para el encabezado y controles */
+.personal-tab .search-container {
+    width: 250px;
+  }
+  
+  .personal-tab .add-employee-btn {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background-color: #4a6bff;
+    border-color: #4a6bff;
+    transition: all 0.2s ease;
+  }
+  
+  .personal-tab .add-employee-btn:hover {
+    background-color: #3a5ae8;
+    border-color: #3a5ae8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(74, 107, 255, 0.2);
+  }
+  
+  /* Estilos para la tabla de empleados */
+  .employee-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .employee-table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .employee-table tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+  }
+  
+  .employee-row {
+    transition: background-color 0.2s ease;
+  }
+  
+  .employee-row:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .employee-row:last-child td {
+    border-bottom: none;
+  }
+  
+  .employee-avatar {
+    width: 36px;
+    height: 36px;
+    background-color: #e9ecef;
+    color: #6c757d;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Estilos para los botones de acción */
+  .btn-delete {
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-delete:hover {
+    background-color: #dc3545;
+    color: white;
+    border-color: #dc3545;
+  }
+  
+  .btn-cancel,
+  .btn-confirm-delete {
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-confirm-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+  }
+  
+  /* Estilos para el modal */
+  .employee-modal .modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .employee-modal .modal-header {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .employee-modal .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .employee-modal .modal-title {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .modal-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #f0f4ff;
+    color: #4a6bff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Estilos para los estados vacíos */
+  .empty-state {
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .empty-icon,
+  .empty-search-icon {
+    width: 80px;
+    height: 80px;
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  
+  /* Animaciones */
+  .animate__animated {
+    animation-duration: 0.5s;
+  }
+  
+  .animate__fadeIn {
+    animation-name: fadeIn;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 767.98px) {
+    .personal-tab .search-container {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+  
+    .employee-table thead th,
+    .employee-table tbody td {
+      padding: 0.75rem;
+    }
+  
+    .btn-delete,
+    .btn-cancel,
+    .btn-confirm-delete {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+  
+    .employee-avatar {
+      width: 32px;
+      height: 32px;
+    }
+  }
+  
+  @media (max-width: 575.98px) {
+    .employee-table {
+      font-size: 0.875rem;
+    }
+  }
+  

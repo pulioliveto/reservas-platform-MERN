@@ -2,28 +2,22 @@
 .calendario-dias {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1rem;
   width: 100%;
-  max-width: 600px;
-  margin: auto;
-  text-align: center;
-  background-color: white;
-  border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background-color: white;
 }
 
+/* Estilos para el encabezado del calendario */
 .calendario-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .calendario-title-container {
   text-align: center;
+  flex: 1;
 }
 
 .calendario-title {
@@ -35,15 +29,17 @@
 }
 
 .calendario-current-date {
-  margin: 0.25rem 0 0;
+  margin-top: 0.5rem;
   font-size: 0.85rem;
   color: #6c757d;
-  text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-calendar {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,21 +56,34 @@
   color: #212529;
 }
 
+.btn-calendar:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.25rem rgba(74, 107, 255, 0.25);
+}
+
+/* Estilos para la cuadrícula de días */
 .calendario-dias-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.75rem;
+  gap: 12px;
   width: 100%;
 }
 
+/* Estilos para cada día */
 .dia {
   position: relative;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   aspect-ratio: 1;
+  min-height: 90px;
+}
+
+.dia:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.25);
 }
 
 .dia-content {
@@ -88,33 +97,34 @@
 
 .dia-nombre {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
   font-weight: 500;
 }
 
 .dia-numero {
-  margin: 0.25rem 0;
-  font-size: 1.5rem;
+  margin: 0.5rem 0;
+  font-size: 1.75rem;
   font-weight: 700;
+  line-height: 1;
 }
 
 /* Estilos para los diferentes estados */
 .dia-abierto {
   background-color: #f0f9ff;
-  border: 1px solid #4a6bff;
+  border: 2px solid #4a6bff;
   color: #4a6bff;
 }
 
 .dia-abierto:hover {
   background-color: #e0f0ff;
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(74, 107, 255, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(74, 107, 255, 0.2);
 }
 
 .dia-cerrado {
   background-color: #fff5f5;
-  border: 1px solid #dc3545;
+  border: 2px solid #dc3545;
   color: #dc3545;
   cursor: not-allowed;
 }
@@ -125,7 +135,7 @@
 
 .dia-ocupado {
   background-color: #f8f9fa;
-  border: 1px solid #adb5bd;
+  border: 2px solid #adb5bd;
   color: #6c757d;
   opacity: 0.7;
   cursor: not-allowed;
@@ -137,15 +147,15 @@
 
 .dia-pocos {
   background-color: #fff9db;
-  border: 1px solid #ffc107;
+  border: 2px solid #ffc107;
   color: #ff9800;
   animation: pulse 1.5s infinite;
 }
 
 .dia-pocos:hover {
   background-color: #fff3bf;
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(255, 193, 7, 0.2);
 }
 
 /* Animación de pulso para días con pocos turnos */
@@ -164,7 +174,7 @@
 /* Estilos para el día seleccionado */
 .dia.selected {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 .dia.selected.dia-abierto {
@@ -185,10 +195,10 @@
 .dia.today::after {
   content: "";
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 8px;
-  height: 8px;
+  top: 10px;
+  right: 10px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background-color: #4a6bff;
 }
@@ -196,76 +206,112 @@
 /* Estilos para los iconos de estado */
 .status-icon-container {
   position: absolute;
-  bottom: 8px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .status-icon {
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 /* Estilos responsivos */
-@media (max-width: 576px) {
-  .calendario-dias {
-    padding: 1rem;
-    width: 100%;
-    max-width: 100%;
-  }
-
+@media (max-width: 991.98px) {
   .calendario-dias-grid {
-    gap: 0.35rem; /* Reducido de 0.5rem para que quepan mejor los días */
-    width: 100%;
+    gap: 10px;
   }
 
   .dia {
-    min-width: 40px; /* Asegurar un ancho mínimo */
-    min-height: 40px; /* Asegurar una altura mínima */
+    min-height: 80px;
   }
 
   .dia-numero {
-    font-size: 1.1rem; /* Reducido de 1.25rem */
-    margin: 0.1rem 0; /* Reducido el margen */
-  }
-
-  .dia-nombre {
-    font-size: 0.65rem; /* Reducido de 0.7rem */
-  }
-
-  .calendario-title {
-    font-size: 1.1rem; /* Reducido de 1.25rem */
-  }
-
-  .calendario-current-date {
-    font-size: 0.7rem; /* Reducido de 0.75rem */
-  }
-
-  .status-icon {
-    font-size: 0.7rem; /* Reducido de 0.9rem */
-  }
-
-  .status-icon-container {
-    bottom: 4px; /* Ajustado de 8px */
-  }
-
-  /* Hacer que el calendario ocupe todo el ancho disponible */
-  .calendar-container {
-    width: 100%;
-    padding: 0;
+    font-size: 1.5rem;
   }
 }
 
-/* Ajustes adicionales para pantallas muy pequeñas */
-@media (max-width: 360px) {
+@media (max-width: 767.98px) {
+  .calendario-dias {
+    padding: 1rem;
+  }
+
   .calendario-dias-grid {
-    gap: 0.25rem; /* Aún más reducido */
+    gap: 8px;
+  }
+
+  .dia {
+    min-height: 70px;
+  }
+
+  .dia-nombre {
+    font-size: 0.8rem;
   }
 
   .dia-numero {
-    font-size: 1rem;
+    font-size: 1.25rem;
+    margin: 0.25rem 0;
+  }
+
+  .status-icon {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .calendario-dias-grid {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+  }
+
+  .dia {
+    min-height: 60px;
+  }
+
+  .dia-nombre {
+    font-size: 0.7rem;
+  }
+
+  .dia-numero {
+    font-size: 1.1rem;
+    margin: 0.2rem 0;
+  }
+
+  .status-icon {
+    font-size: 0.8rem;
+  }
+
+  .status-icon-container {
+    bottom: 5px;
+  }
+
+  .dia.today::after {
+    width: 8px;
+    height: 8px;
+    top: 8px;
+    right: 8px;
+  }
+}
+
+/* Asegurar que en pantallas muy pequeñas aún se vean los 7 días */
+@media (max-width: 359.98px) {
+  .calendario-dias {
+    padding: 0.75rem;
+  }
+
+  .calendario-dias-grid {
+    gap: 4px;
+  }
+
+  .dia {
+    min-height: 50px;
   }
 
   .dia-nombre {
     font-size: 0.6rem;
+  }
+
+  .dia-numero {
+    font-size: 1rem;
+    margin: 0.1rem 0;
   }
 }
