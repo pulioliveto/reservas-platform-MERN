@@ -7,21 +7,22 @@ import { notifyReserva, notifyCancelacion, getAdminNotifications, markNotificati
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-  const { negocioId, clienteId, turno, fecha, dni, telefono, email} = req.body;
+router.post("/", auth, async (req, res) => {
+  const { negocioId, turno, fecha, dni, telefono, email } = req.body;
+  const clienteId = req.user.uid; // <-- del token
+  const clienteNombre = req.user.name || "Sin nombre"; // <-- del token
 
   // Validar datos de entrada
-  if (!negocioId || !clienteId || !turno || !fecha) {
+  if (!negocioId || !turno || !fecha) {
     return res.status(400).json({ error: "Faltan datos requeridos para la reserva." });
   }
 
   try {
-    console.log("Datos recibidos en el backend:", { negocioId, clienteId, turno, fecha });
+    console.log("Datos recibidos en el backend:", { negocioId, turno, fecha, dni, telefono, email });
+    console.log("Usuario autenticado PROBANDOOOO:", { clienteId, clienteNombre });
 
     // Verifica si el turno ya fue reservado
     const existingReservation = await Reservation.findOne({ negocioId, turno, fecha });
-
-    console.log("Reserva existente:", existingReservation);
 
     if (existingReservation && !existingReservation.isAvailable) {
       return res.status(400).json({ error: "El turno ya no está disponible." });
@@ -31,12 +32,13 @@ router.post("/", async (req, res) => {
     const newReservation = new Reservation({
       negocioId,
       clienteId,
+      clienteNombre,
       turno,
       fecha,
       dni,
       telefono,
       email,
-      isAvailable: false, // Marca el turno como no disponible
+      isAvailable: false,
     });
 
     await newReservation.save();
@@ -102,7 +104,7 @@ router.get('/:negocioId/all', auth, async (req, res) => {
     // Agregar nombre del cliente a cada reserva
     const reservasConNombre = reservas.map(r => ({
       ...r.toObject(),
-      clienteNombre: clientesMap[r.clienteId] || null
+      clienteNombre: r.clienteNombre || clientesMap[r.clienteId] || r.clienteId || null
     }));
     res.json(reservasConNombre);
   } catch (err) {

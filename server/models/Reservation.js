@@ -2,13 +2,14 @@ import mongoose from 'mongoose';
 
 const reservationSchema = new mongoose.Schema({
   negocioId: { type: mongoose.Schema.Types.ObjectId, ref: "Business", required: true },
-  clienteId: { type: String, ref: "User", required: true },
-  turno: { type: String, required: true }, // Ejemplo: "10:00 - 11:00"
+  clienteId: { type: String, required: true }, // uid de Firebase
+  clienteNombre: { type: String, required: true }, // Nombre del clien
+  turno: { type: String, required: true },
   fecha: { type: Date, required: true },
-  dni: { type: Number, required: true }, // DNI del cliente
-  telefono: { type: Number, required: true }, //  Teléfono del cliente
-  email: { type: String, required: true }, // Correo electrónico del cliente
-  isAvailable: { type: Boolean, default: true }, // Controlar disponibilidad
+  dni: { type: Number, required: true },
+  telefono: { type: Number, required: true },
+  email: { type: String, required: true },
+  isAvailable: { type: Boolean, default: true },
 });
 
 export default mongoose.model("Reservation", reservationSchema);

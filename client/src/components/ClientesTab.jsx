@@ -34,6 +34,9 @@ const ClientesTab = ({ loadingReservas, errorReservas, reservas }) => {
     );
   }, [selectedCliente, reservas]);
 
+
+  console.log("Reservas en ClientesTab:", reservas);
+
   return (
     <div className="w-100">
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
@@ -108,7 +111,7 @@ const ClientesTab = ({ loadingReservas, errorReservas, reservas }) => {
                     setShowModal(true);
                   }}
                 >
-                  <td>{r.user?.name || r.clienteNombre || r.clienteId || "-"}</td>
+                  <td>{r.clienteNombre || "-"}</td>
                   <td>{new Date(r.fecha).toLocaleDateString()}</td>
                   <td>{r.turno}</td>
                 </tr>

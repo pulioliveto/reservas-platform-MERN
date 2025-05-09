@@ -240,7 +240,6 @@ const DetalleNegocio = () => {
       }
       await reservarTurno({
         negocioId: business._id,
-        clienteId: user.uid,
         turno: selectedSlot.time,
         fecha: format(selectedDay, "yyyy-MM-dd"),
         dni,
