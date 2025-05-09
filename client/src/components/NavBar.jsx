@@ -22,8 +22,11 @@ const Navbar = () => {
   const userDropdownRef = React.useRef(null)
 
   useEffect(() => {
-    const publicRoutes = ["/login", "/privacidad", "/terminos"];
-    if (!user && !publicRoutes.includes(location.pathname)) {
+    const publicRoutes = ["/login", "/privacidad", "/terminos", "/negocio"];
+    if (
+      !user &&
+      !publicRoutes.some((route) => location.pathname === route || location.pathname.startsWith(route + "/"))
+    ) {
       navigate("/");
     }
   }, [user, navigate, location.pathname]);

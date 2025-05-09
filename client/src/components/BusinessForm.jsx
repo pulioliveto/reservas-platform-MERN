@@ -63,8 +63,17 @@ const BusinessForm = ({ formData, handleChange, handlePhoneChange }) => (
 
     <Form.Group className="mb-4">
       <Form.Label className="fw-medium">Teléfono de contacto</Form.Label>
-      <PhoneInputWhatsApp value={formData.phone || ""} onChange={handlePhoneChange} />
-      <Form.Text className="text-muted">Este número se usará para contacto y notificaciones por WhatsApp</Form.Text>
+      <Form.Control
+        type="tel"
+        name="phone"
+        value={formData.phone || ""}
+        onChange={handleChange}
+        placeholder="Ej: +54 9 343 1234567"
+        required
+      />
+      <Form.Text className="text-muted">
+        Este número se usará para contacto y notificaciones por WhatsApp
+      </Form.Text>
     </Form.Group>
 
     <hr className="my-4" />

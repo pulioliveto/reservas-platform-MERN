@@ -169,7 +169,7 @@ const MainPage = () => {
               <p className="mb-0">
                 <i className="bi bi-envelope me-2"></i> reservaturnosapp@gmail.com
                 <br />
-                <i className="bi bi-telephone me-2"></i> +123 456 7890
+                <i className="bi bi-telephone me-2"></i> +39 344 497 7833
               </p>
             </Col>
           </Row>
