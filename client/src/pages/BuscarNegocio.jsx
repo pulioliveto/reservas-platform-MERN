@@ -67,7 +67,7 @@ const BuscarNegocio = () => {
       return (
         <div className="business-logo">
           <img
-            src={`${process.env.REACT_APP_API_URL}/uploads/${business.logo.replace("\\", "/")}`}
+            src={business.logo}
             alt={`${business.name} logo`}
             onError={(e) => {
               e.target.onerror = null
