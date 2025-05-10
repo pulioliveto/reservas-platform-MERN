@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Form, Button, InputGroup } from "react-bootstrap"
+import { Form, Button, InputGroup, Spinner } from "react-bootstrap"
 import PhoneInputWhatsApp from "./PhoneInputWhatsApp"
 import { FaFacebook, FaInstagram, FaYoutube, FaGlobe, FaMapMarkerAlt, FaSave, FaTimes } from "react-icons/fa"
 
@@ -11,9 +11,10 @@ const EditarContacto = ({ business, onSave, onCancel, loading }) => {
     youtube: business.youtube ?? "",
     website: business.website ?? "",
     address: business.address ?? "",
+    logo: null, // Para el nuevo archivo
   })
   const [saving, setSaving] = useState(false)
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -22,6 +23,8 @@ const EditarContacto = ({ business, onSave, onCancel, loading }) => {
   const handlePhoneChange = (phone) => {
     setFormData((prev) => ({ ...prev, phone }))
   }
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -141,7 +144,7 @@ const EditarContacto = ({ business, onSave, onCancel, loading }) => {
               <FaTimes className="me-2" /> Cancelar
             </Button>
             <Button type="submit" variant="primary" disabled={saving || loading} className="d-flex align-items-center">
-              <FaSave className="me-2" /> {saving || loading ? "Guardando..." : "Guardar cambios"}
+              {saving || loading ? <Spinner size="sm" /> : <><FaSave className="me-2" /> Guardar cambios</>}
             </Button>
           </div>
         </Form>

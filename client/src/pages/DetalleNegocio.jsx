@@ -1,4 +1,6 @@
-import { useEffect, useState, useCallback } from "react"
+"use client"
+
+import { useEffect, useState, useCallback, useRef } from "react"
 import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { getBusinessById } from "../services/apiBusiness"
 import { reservarTurno } from "../services/apiReservation"
@@ -14,7 +16,6 @@ import ContactoTab from "../components/ContactoTab"
 import ClientesTab from "../components/ClientesTab"
 import EditarContacto from "../components/EditarContacto"
 import { FaPen, FaMapMarkerAlt, FaPhone, FaCalendarAlt, FaUsers, FaInfoCircle } from "react-icons/fa"
-import PersonalTab from "../components/PersonalTab"; // Asegurate que el nombre coincida con tu archivo
 
 const DetalleNegocio = () => {
   const { id } = useParams()
@@ -33,7 +34,7 @@ const DetalleNegocio = () => {
   const [activeTab, setActiveTab] = useState("agenda")
   const [editandoContacto, setEditandoContacto] = useState(false)
   const [editLoading, setEditLoading] = useState(false)
-  const [empleados, setEmpleados] = useState([]);
+  const fileInputRef = useRef(null)
 
   // Mapeo de días con todas las variantes posibles
   const DAYS_MAP = [
@@ -201,27 +202,6 @@ const DetalleNegocio = () => {
     fetchReservas()
   }, [isOwner, business])
 
-  const fetchEmpleados = useCallback(async () => {
-    if (!business?._id) return;
-    try {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      const token = user ? await user.getIdToken() : null;
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/empleados/${business._id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) return setEmpleados([]);
-      const data = await res.json();
-      setEmpleados(data);
-    } catch {
-      setEmpleados([]);
-    }
-  }, [business]);
-
-  useEffect(() => {
-    fetchEmpleados();
-  }, [fetchEmpleados]);
-
   // Cambia la pestaña activa según el query param 'tab'
   useEffect(() => {
     const params = new URLSearchParams(location.search)
@@ -243,9 +223,6 @@ const DetalleNegocio = () => {
     setShowModal(true)
   }
 
-  const auth = getAuth()
-  const user = auth.currentUser;
-
   // Cerrar modal
   const closeModal = () => {
     setShowModal(false)
@@ -253,7 +230,7 @@ const DetalleNegocio = () => {
   }
 
   // Confirmar reserva
-  const handleReservationConfirm = async ({dni, telefono, email, selectedSlot, empleadoId}) => {
+  const handleReservationConfirm = async () => {
     try {
       const auth = getAuth()
       const user = auth.currentUser
@@ -263,12 +240,9 @@ const DetalleNegocio = () => {
       }
       await reservarTurno({
         negocioId: business._id,
+        clienteId: user.uid,
         turno: selectedSlot.time,
         fecha: format(selectedDay, "yyyy-MM-dd"),
-        dni,
-        telefono,
-        email,
-        empleadoId, // <-- nuevo campo
       })
 
       // Actualizar disponibilidad del slot
@@ -309,6 +283,41 @@ const DetalleNegocio = () => {
       toast.success("Contacto actualizado")
     } catch (err) {
       toast.error("Error al guardar los cambios")
+    } finally {
+      setEditLoading(false)
+    }
+  }
+
+  const handleLogoChange = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    const formData = new FormData()
+    formData.append("logo", file)
+
+    setEditLoading(true)
+    try {
+      const auth = getAuth()
+      const user = auth.currentUser
+      const token = user ? await user.getIdToken() : null
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/businesses/${business._id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error("Error al actualizar el logo")
+      }
+
+      const updatedBusiness = await response.json()
+      setBusiness((prev) => ({ ...prev, ...updatedBusiness }))
+      toast.success("Logo actualizado")
+    } catch (error) {
+      console.error("Error al actualizar el logo:", error)
+      toast.error("Error al actualizar el logo")
     } finally {
       setEditLoading(false)
     }
@@ -396,11 +405,32 @@ const DetalleNegocio = () => {
             <div className="row g-0">
               {business.logo && (
                 <div className="col-md-3 business-logo-container">
-                  <img
-                    src={`${process.env.REACT_APP_API_URL}/uploads/${business.logo}`}
-                    alt="Logo"
-                    className="business-logo"
-                  />
+                  {isOwner && (
+                    <input
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      ref={fileInputRef}
+                      onChange={handleLogoChange}
+                    />
+                  )}
+                  <div className={`logo-wrapper ${isOwner ? "logo-editable" : ""}`}>
+                    <img
+                      src={business.logo}
+                      alt="Logo"
+                      className="business-logo"
+                      onClick={() => {
+                        if (isOwner && fileInputRef.current) fileInputRef.current.click()
+                      }}
+                    />
+                    {isOwner && (
+                      <div className="logo-edit-overlay">
+                        <div className="logo-edit-button">
+                          <FaPen />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
               <div className={`col-md-${business.logo ? "9" : "12"}`}>
@@ -449,26 +479,15 @@ const DetalleNegocio = () => {
                 </button>
               </li>
               {isOwner && (
-                <>
-                  <li className="nav-item">
-                    <button
-                      className={`nav-link ${activeTab === "clientes" ? "active" : ""}`}
-                      onClick={() => setActiveTab("clientes")}
-                    >
-                      <FaUsers className="me-2" />
-                      Clientes
-                    </button>
-                  </li>
-                  <li className="nav-item">
-                    <button
-                      className={`nav-link ${activeTab === "personal" ? "active" : ""}`}
-                      onClick={() => setActiveTab("personal")}
-                    >
-                      <FaUsers className="me-2" />
-                      Personal
-                    </button>
-                  </li>
-                </>
+                <li className="nav-item">
+                  <button
+                    className={`nav-link ${activeTab === "clientes" ? "active" : ""}`}
+                    onClick={() => setActiveTab("clientes")}
+                  >
+                    <FaUsers className="me-2" />
+                    Clientes
+                  </button>
+                </li>
               )}
             </ul>
           </div>
@@ -513,10 +532,6 @@ const DetalleNegocio = () => {
             {activeTab === "clientes" && isOwner && (
               <ClientesTab loadingReservas={loadingReservas} errorReservas={errorReservas} reservas={reservas} />
             )}
-
-            {activeTab === "personal" && isOwner && (
-              <PersonalTab negocioId={business._id} onEmpleadosChange={fetchEmpleados} />
-            )}
           </div>
         </div>
       </div>
@@ -529,8 +544,6 @@ const DetalleNegocio = () => {
           selectedSlot={selectedSlot}
           business={business}
           onConfirm={handleReservationConfirm}
-          user={user}
-          empleados={empleados} // <-- pasa la lista de empleados
         />
       )}
     </div>

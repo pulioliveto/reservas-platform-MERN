@@ -1,48 +1,15 @@
 import express from 'express';
 import Business from '../models/Business.js';
 import upload from '../upload.js';
-import multer from 'multer';
-import path from 'path';
 import { auth } from '../middleware/firebaseAuth.js';
 import { getUserBusinesses, updateBusiness } from '../controllers/businessControllers.js';
 
-
 const router = express.Router();
 
-
-
-// Configuración de multer para almacenar los archivos en una carpeta local llamada 'uploads'
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-
-
-const fileFilter = (req, file, cb) => {
-  const allowedExtensions = /jpeg|jpg|png|gif/;
-  const ext = path.extname(file.originalname).toLowerCase();
-  if (allowedExtensions.test(ext)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Solo se permiten archivos de imagen"));
-  }
-};
-
-const uploads = multer({ storage, fileFilter  });
-
-
 // Ruta para crear un nuevo negocio
-router.post('/create', auth, uploads.single('logo'), async (req, res) => {
+router.post('/create', auth, upload.single('logo'), async (req, res) => {
   try {
-    console.log('Usuario autenticado en /create:', req.user);
-    console.log('Datos recibidos en el backend:', req.body);
-
-    const ownerEmail = req.user.email; // Obtener el email del usuario autenticado
-
+    const ownerEmail = req.user.email;
     const { name, description, address, phone, facebook, instagram, youtube, website, schedule, turnoDuration } = req.body;
 
     // Validar campos obligatorios
@@ -54,8 +21,6 @@ router.post('/create', auth, uploads.single('logo'), async (req, res) => {
     let parsedSchedule;
     try {
       parsedSchedule = typeof schedule === 'string' ? JSON.parse(schedule) : schedule;
-
-      // Verificar que el resultado sea un array
       if (!Array.isArray(parsedSchedule)) {
         throw new Error('El campo schedule debe ser un array de objetos.');
       }
@@ -63,12 +28,9 @@ router.post('/create', auth, uploads.single('logo'), async (req, res) => {
       return res.status(400).json({ message: 'Formato de schedule inválido', error: error.message });
     }
 
-    // Validar que el schedule tenga al menos un día definido
     if (!parsedSchedule || parsedSchedule.length === 0) {
       return res.status(400).json({ message: 'Debe proporcionar horarios para el negocio.' });
     }
-
-    console.log(req.user); // DEPURACIÓN
 
     // Construir los datos del negocio
     const businessData = {
@@ -80,14 +42,13 @@ router.post('/create', auth, uploads.single('logo'), async (req, res) => {
       instagram,
       youtube,
       website: website || '',
-      logo: req.file ? req.file.filename : null, // Guardar solo el nombre del archivo
-      schedule: parsedSchedule, // Usar el schedule parseado
-      turnoDuration: Number(turnoDuration), // Asegura que sea número
-      createdBy: req.user.uid, // ID del usuario que creó el negocio
+      logo: req.file ? req.file.path : null, // URL de Cloudinary
+      schedule: parsedSchedule,
+      turnoDuration: Number(turnoDuration),
+      createdBy: req.user.uid,
       ownerEmail
     };
 
-    // Crear y guardar el negocio en la base de datos
     const business = new Business(businessData);
     await business.save();
 
@@ -97,7 +58,6 @@ router.post('/create', auth, uploads.single('logo'), async (req, res) => {
     res.status(500).json({ message: 'Error al crear el negocio', error: error.message });
   }
 });
-
 
 // Obtener todos los negocios
 router.get('/search', async (req, res) => {
@@ -148,7 +108,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Ruta para actualizar un negocio
-router.put('/:id', auth, uploads.single('logo'), async (req, res) => {
+router.put('/:id', auth, upload.single('logo'), async (req, res) => {
   const { id } = req.params;
   const { name, description, address, phone, facebook, instagram, youtube, website } = req.body;
 
@@ -161,7 +121,7 @@ router.put('/:id', auth, uploads.single('logo'), async (req, res) => {
     instagram,
     youtube,
     website,
-    logo: req.file ? req.file.filename : undefined, // Guardar solo el nombre del archivo
+    logo: req.file ? req.file.path : undefined, // URL de Cloudinary
   };
 
   try {

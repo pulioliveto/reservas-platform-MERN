@@ -9,7 +9,6 @@ import passport from 'passport';
 import session from 'express-session';
 import './config/passport-setup.js';
 import path from 'path';
-import multer from 'multer';
 import admin from 'firebase-admin';
 import calendarRoutes from './routes/calendarRoutes.js';
 import fs from 'fs';
@@ -25,16 +24,6 @@ const __dirname = dirname(__filename);
 const app = express();
 
 dotenv.config();
-
-
-// Crear la carpeta 'uploads' si no existe
-const uploadsDir = path.join(process.cwd(), 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-}
-
-// Sirve la carpeta "uploads" para acceso público
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(express.json());
 console.log('Mongo URI:', process.env.MONGO_URI);
