@@ -15,7 +15,8 @@ import AgendaTab from "../components/AgendaTab"
 import ContactoTab from "../components/ContactoTab"
 import ClientesTab from "../components/ClientesTab"
 import EditarContacto from "../components/EditarContacto"
-import { FaPen, FaMapMarkerAlt, FaPhone, FaCalendarAlt, FaUsers, FaInfoCircle } from "react-icons/fa"
+import PersonalTab from "../components/PersonalTab"; // Asegúrate de tener este componente
+import { FaPen, FaMapMarkerAlt, FaPhone, FaCalendarAlt, FaUsers, FaInfoCircle, FaUserTie } from "react-icons/fa" // Para el ícono de la pestaña Personal
 
 const DetalleNegocio = () => {
   const { id } = useParams()
@@ -29,6 +30,7 @@ const DetalleNegocio = () => {
   const [reservas, setReservas] = useState([])
   const [loadingReservas, setLoadingReservas] = useState(false)
   const [errorReservas, setErrorReservas] = useState("")
+  const [empleados, setEmpleados] = useState([]);
   const navigate = useNavigate()
   const location = useLocation()
   const [activeTab, setActiveTab] = useState("agenda")
@@ -202,11 +204,36 @@ const DetalleNegocio = () => {
     fetchReservas()
   }, [isOwner, business])
 
+  // Función para obtener empleados
+  const fetchEmpleados = useCallback(async () => {
+    if (!business?._id) return;
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : null;
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/empleados/${business._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return setEmpleados([]);
+      const data = await res.json();
+      setEmpleados(data);
+    } catch {
+      setEmpleados([]);
+    }
+  }, [business]);
+
+// Llama a los empleados si es que existen.
+  useEffect(() => {
+    if (business) {
+      fetchEmpleados();
+    }
+  }, [business, fetchEmpleados]);
+
   // Cambia la pestaña activa según el query param 'tab'
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     const tabParam = params.get("tab")
-    if (tabParam && (tabParam === "agenda" || tabParam === "contacto" || tabParam === "clientes")) {
+    if (tabParam && (tabParam === "agenda" || tabParam === "contacto" || tabParam === "clientes" || tabParam === "personal")) {
       setActiveTab(tabParam)
     } else {
       setActiveTab("agenda")
@@ -230,7 +257,7 @@ const DetalleNegocio = () => {
   }
 
   // Confirmar reserva
-  const handleReservationConfirm = async () => {
+  const handleReservationConfirm = async (formData) => {
     try {
       const auth = getAuth()
       const user = auth.currentUser
@@ -243,6 +270,10 @@ const DetalleNegocio = () => {
         clienteId: user.uid,
         turno: selectedSlot.time,
         fecha: format(selectedDay, "yyyy-MM-dd"),
+        dni: formData.dni,
+        telefono: formData.telefono,
+        email: formData.email,
+        empleadoId: formData.empleadoId, // si corresponde
       })
 
       // Actualizar disponibilidad del slot
@@ -489,6 +520,17 @@ const DetalleNegocio = () => {
                   </button>
                 </li>
               )}
+              {isOwner && (
+                <li className="nav-item">
+                  <button
+                    className={`nav-link ${activeTab === "personal" ? "active" : ""}`}
+                    onClick={() => setActiveTab("personal")}
+                  >
+                    <FaUserTie className="me-2" />
+                    Personal
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
           <div className="card-body p-4">
@@ -532,6 +574,14 @@ const DetalleNegocio = () => {
             {activeTab === "clientes" && isOwner && (
               <ClientesTab loadingReservas={loadingReservas} errorReservas={errorReservas} reservas={reservas} />
             )}
+
+            {activeTab === "personal" && isOwner && (
+              <PersonalTab
+                negocioId={business._id}
+                empleados={empleados}
+                onEmpleadosChange={fetchEmpleados}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -544,6 +594,7 @@ const DetalleNegocio = () => {
           selectedSlot={selectedSlot}
           business={business}
           onConfirm={handleReservationConfirm}
+          empleados={empleados}
         />
       )}
     </div>

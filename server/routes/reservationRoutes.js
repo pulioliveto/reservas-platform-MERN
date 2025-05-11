@@ -4,6 +4,7 @@ import { auth } from '../middleware/firebaseAuth.js';
 import Business from '../models/Business.js';
 import User from '../models/User.js';
 import { notifyReserva, notifyCancelacion, getAdminNotifications, markNotificationsRead, clearAllNotifications } from '../controllers/notificationController.js';
+import Empleado from '../models/Employee.js';
 
 const router = express.Router();
 
@@ -28,6 +29,13 @@ router.post("/", auth, async (req, res) => {
       return res.status(400).json({ error: "El turno ya no está disponible." });
     }
 
+    // Buscar el nombre del empleado si hay empleadoId
+    let empleadoNombre = "";
+    if (empleadoId) {
+      const empleado = await Empleado.findById(empleadoId);
+      if (empleado) empleadoNombre = empleado.nombre;
+    }
+
     // Crear una nueva reserva
     const newReservation = new Reservation({
       negocioId,
@@ -38,7 +46,7 @@ router.post("/", auth, async (req, res) => {
       dni,
       telefono,
       email,
-      empleadoNombre: empleadoId, // <-- Agregá esto
+      empleadoNombre, // ahora guarda el nombre, no el ID
       isAvailable: false,
     });
 

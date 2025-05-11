@@ -41,10 +41,7 @@ const ReservaModal = ({ show, onHide, selectedDay, selectedSlot, business, onCon
     setIsSubmitting(true)
 
     try {
-      await onConfirm({
-        ...formData,
-        selectedSlot,
-      })
+      await onConfirm(formData)
     } catch (error) {
       console.error("Error al confirmar reserva:", error)
     } finally {
@@ -56,6 +53,8 @@ const ReservaModal = ({ show, onHide, selectedDay, selectedSlot, business, onCon
 
   const dayName = format(selectedDay, "EEEE", { locale: es })
   const formattedDate = format(selectedDay, "d 'de' MMMM 'de' yyyy", { locale: es })
+
+  console.log("Empleados recibidos en ReservaModal:", empleados);
 
   return (
     <Modal show={show} onHide={onHide} centered className="reserva-modal">
@@ -170,7 +169,7 @@ const ReservaModal = ({ show, onHide, selectedDay, selectedSlot, business, onCon
             </InputGroup>
           </Form.Group>
 
-          {empleados.length > 0 && (
+          {empleados && empleados.length > 0 && (
             <Form.Group className="mb-4">
               <Form.Label>Profesional (opcional)</Form.Label>
               <InputGroup>
