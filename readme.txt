@@ -1,14 +1,63 @@
-Tareas:
-Funcionalidades básicas:
+# Reservas Platform MERN
 
--Registro y autenticación de usuarios: Para clientes y administradores de negocios.
--Panel de administración: Los administradores pueden crear y gestionar su negocio (nombre, tipo, horarios de atención, etc.).
--Gestión de reservas: Crear, editar y eliminar reservas.
--Vista de disponibilidad: Mostrar horarios disponibles según la configuración del negocio.
--Notificaciones y recordatorios: Enviar correos electrónicos o notificaciones a los usuarios.
--Funcionalidades avanzadas (opcional):
+**Gestiona las reservas de tu PYME de manera sencilla y eficiente.**  
+Reservas Platform es una aplicación desarrollada con el stack MERN para ayudar a pequeñas y medianas empresas a organizar sus reservas de forma centralizada y profesional.
 
--Integración de pagos: Permitir a los negocios cobrar por reservas.
--Reseñas y calificaciones: Permitir a los clientes dejar opiniones sobre su experiencia.
--Integración de calendarios: Sincronizar con Google Calendar u otros calendarios.
--API para integración: Permitir que otros desarrolladores integren sus servicios o aplicaciones.
+---
+
+## 🚀 Características
+
+- Gestión de reservas en tiempo real.
+- Interfaz intuitiva y fácil de usar.
+- Panel de administración para gestionar usuarios y datos.
+- Integración con bases de datos de MongoDB.
+- Diseño responsivo para dispositivos móviles y escritorio.
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+- **Frontend**: React.js, CSS.
+- **Backend**: Node.js, Express.js.
+- **Base de datos**: MongoDB.
+- **Otras herramientas**: 
+  - Cloudinary para almacenamiento de imagenes.
+  - FIREBASE Para autenticación.
+
+---
+
+
+---
+
+## 📦 Instalación
+
+Sigue estos pasos para ejecutar el proyecto localmente:
+
+1. Clona este repositorio:
+   ```bash
+   git clone https://github.com/pulioliveto/reservas-platform-MERN.git
+
+
+2. Accede al directorio del proyecto:
+cd reservas-platform-MERN
+
+
+3. Instala las dependencias del servidor y el cliente:
+cd server && npm install
+cd client && npm install
+
+4. Configura las variables de entorno:
+Crea un archivo .env en el directorio server con las siguientes variables:
+MONGO_URI=
+PORT=5000
+CLOUDINARY_CLOUD_NAME
+CLOUDINARY_API_KEY
+CLOUDINARY_API_SECRET
+
+5. Inicia el servidor y el cliente:
+En /server ejecuta el comando npm run dev
+En /client ejecuta el comando npm start.
+
+
+
+### ¡Gracias por visitar este repositorio! Si tienes alguna pregunta, no dudes en abrir un issue o contactarme.
