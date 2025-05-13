@@ -18,6 +18,8 @@ import MisTurnos from './pages/MisTurnos';
 import ComoFunciona from './pages/ComoFunciona.jsx';
 import Terminos from "./pages/Terminos";
 import Privacidad from "./pages/Privacidad";
+import QuienesSomos from './pages/QuienesSomos.jsx';
+import Contacto from './pages/Contacto.jsx';
 
 function App() {
   const { loading } = useContext(AuthContext);
@@ -46,6 +48,9 @@ function App() {
         <Route path="/negocio/:id" element={<DetalleNegocio />} />
         <Route path="/mis-turnos" element={<MisTurnos />} />
         <Route path="/como-funciona" element={<ComoFunciona />} />
+        <Route path="/quienes-somos" element={<QuienesSomos />} />  
+        <Route path="/contacto" element={<Contacto />} />
+        
         
       </Routes>
       <ToastContainer />

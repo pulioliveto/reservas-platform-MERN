@@ -1,6 +1,7 @@
 import Notification from '../models/Notification.js';
 import User from '../models/User.js';
 import Business from '../models/Business.js';
+import { notifyReservaAdmin, notifyReservaCliente, notifyCancelacionAdmin } from '../utils/emailNotifications.js';
 
 // Crear notificación de reserva
 export const notifyReserva = async ({ negocioId, clienteId, fecha, turno, reservationId, req }) => {
@@ -10,8 +11,14 @@ export const notifyReserva = async ({ negocioId, clienteId, fecha, turno, reserv
   // Prioriza el nombre de req.user, luego el de la base, luego el ID
   const clienteNombre = req.user?.name || (cliente && cliente.name) || clienteId || "Cliente desconocido";
   const adminUid = negocio.createdBy;
+  const adminEmail = negocio.email || "reservaturnosapp@gmail.com"; // o el email del dueño
+  const clienteEmail = cliente?.email || "";
+  const empleadoNombre = reservationId?.empleadoNombre || ""; // ajusta según tu modelo
+  const negocioNombre = negocio.name;
   const fechaStr = new Date(fecha).toLocaleDateString('es-AR');
   const mensaje = `${clienteNombre} reservó un turno a ${negocio.name} el ${fechaStr} (${turno})`;
+
+  // Notificación en la app
   const notification = await Notification.create({
     recipient: adminUid,
     message: mensaje,
@@ -20,6 +27,29 @@ export const notifyReserva = async ({ negocioId, clienteId, fecha, turno, reserv
     clientName: clienteNombre,
     date: fecha,
   });
+
+  // Notificación por email al admin
+  await notifyReservaAdmin({
+    adminEmail,
+    clienteNombre,
+    clienteEmail,
+    fecha: fechaStr,
+    turno,
+    empleadoNombre,
+    negocioNombre,
+  });
+
+  // Notificación por email al cliente
+  if (clienteEmail) {
+    await notifyReservaCliente({
+      clienteEmail,
+      negocioNombre,
+      fecha: fechaStr,
+      turno,
+      empleadoNombre,
+    });
+  }
+
   // Emitir en tiempo real si el admin está conectado
   const io = req.app.get('io');
   const userSockets = req.app.get('userSockets');
@@ -46,6 +76,16 @@ export const notifyCancelacion = async ({ reserva, req }) => {
       clientName: clienteNombre,
       date: reserva.fecha,
     });
+
+    // --- ENVÍA EL EMAIL AL ADMIN ---
+    await notifyCancelacionAdmin({
+      adminEmail: negocio?.email || "reservaturnosapp@gmail.com",
+      clienteNombre,
+      fecha: fechaStr,
+      turno: reserva.turno,
+      negocioNombre: negocio?.name || "",
+    });
+
     // Emitir en tiempo real si el admin está conectado
     const io = req.app.get('io');
     const userSockets = req.app.get('userSockets');

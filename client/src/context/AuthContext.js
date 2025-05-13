@@ -26,30 +26,8 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     });
 
-    // Cierre de sesión tras 5 minutos de inactividad
-    let timeout;
-    const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 minutos
-
-    const resetTimer = () => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        signOut(auth);
-        setUser(null);
-      }, INACTIVITY_LIMIT);
-    };
-
-    window.addEventListener("mousemove", resetTimer);
-    window.addEventListener("keydown", resetTimer);
-    resetTimer();
-
-    return () => {
-      unsubscribe();
-      clearTimeout(timeout);
-      window.removeEventListener("mousemove", resetTimer);
-      window.removeEventListener("keydown", resetTimer);
-    };
-  }, []);
-
+return () => unsubscribe();
+},[]);
   const provider = new GoogleAuthProvider();
   provider.addScope('https://www.googleapis.com/auth/calendar');
   

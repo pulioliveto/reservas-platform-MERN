@@ -27,6 +27,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-instagram": "^1.0.0",
+    "resend": "^4.5.1",
     "socket.io": "^4.8.1",
     "sweetalert2": "^11.14.5"
   },

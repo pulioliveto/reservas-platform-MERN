@@ -1,0 +1,313 @@
+/* Estilos generales */
+.contacto-page {
+    position: relative;
+    overflow: hidden;
+    background-color: #f8faff;
+    color: #333;
+  }
+  
+  /* Formas geométricas de fondo */
+  .background-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.6;
+  }
+  
+  .shape-1 {
+    top: -150px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(135deg, #4a6bff 0%, #2541b2 100%);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    animation: float 15s ease-in-out infinite alternate;
+  }
+  
+  .shape-2 {
+    bottom: -200px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, #4a6bff 0%, #2541b2 100%);
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    animation: float 20s ease-in-out infinite alternate-reverse;
+  }
+  
+  .shape-3 {
+    top: 20%;
+    left: 20%;
+    width: 300px;
+    height: 300px;
+    background: rgba(74, 107, 255, 0.1);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    animation: float 25s ease-in-out infinite alternate;
+  }
+  
+  .shape-4 {
+    bottom: 10%;
+    right: 10%;
+    width: 200px;
+    height: 200px;
+    background: rgba(74, 107, 255, 0.1);
+    border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+    animation: float 30s ease-in-out infinite alternate-reverse;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(20px, 20px) rotate(5deg);
+    }
+    100% {
+      transform: translate(-20px, 10px) rotate(-5deg);
+    }
+  }
+  
+  /* Asegurar que el contenido esté por encima de las formas */
+  .z-index-1 {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Estilos para la sección de encabezado */
+  .contacto-header {
+    padding-top: 5rem;
+    padding-bottom: 3rem;
+  }
+  
+  .contacto-header h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+  
+  .contacto-header .lead {
+    font-size: 1.25rem;
+    color: #555;
+  }
+  
+  /* Estilos para el formulario */
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #4a6bff;
+    box-shadow: 0 0 0 0.25rem rgba(74, 107, 255, 0.25);
+  }
+  
+  .input-group-text {
+    color: #6c757d;
+  }
+  
+  .submit-button {
+    background-color: #4a6bff;
+    border-color: #4a6bff;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .submit-button:hover:not(:disabled) {
+    background-color: #3a5ae8;
+    border-color: #3a5ae8;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(74, 107, 255, 0.2);
+  }
+  
+  /* Estilos para la información de contacto */
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .contact-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #4a6bff 0%, #2541b2 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin-right: 1.25rem;
+    flex-shrink: 0;
+  }
+  
+  .instagram-icon {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  }
+  
+  .contact-content {
+    flex: 1;
+  }
+  
+  .contact-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .contact-text {
+    margin-bottom: 0.5rem;
+  }
+  
+  .contact-link {
+    color: #4a6bff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  
+  .contact-link:hover {
+    color: #3a5ae8;
+    text-decoration: underline;
+  }
+  
+  .contact-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+  
+  /* Estilos para el botón de WhatsApp */
+  .whatsapp-button {
+    background-color: #25d366;
+    border-color: #25d366;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .whatsapp-button:hover {
+    background-color: #128c7e;
+    border-color: #128c7e;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
+  }
+  
+  /* Estilos para la sección de FAQ */
+  .faq-section {
+    padding: 3rem 0 5rem;
+  }
+  
+  .faq-item {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    transition: all 0.3s ease;
+  }
+  
+  .faq-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .faq-question {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  
+  .faq-question::before {
+    content: "Q:";
+    position: absolute;
+    left: 0;
+    color: #4a6bff;
+    font-weight: 700;
+  }
+  
+  .faq-answer {
+    color: #666;
+    margin-bottom: 0;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  
+  .faq-answer::before {
+    content: "A:";
+    position: absolute;
+    left: 0;
+    color: #6c757d;
+    font-weight: 700;
+  }
+  
+  /* Animaciones */
+  .animate__animated {
+    animation-duration: 0.5s;
+  }
+  
+  .animate__fadeIn {
+    animation-name: fadeIn;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 991.98px) {
+    .contacto-header {
+      padding-top: 3rem;
+      padding-bottom: 2rem;
+    }
+  
+    .shape-1,
+    .shape-2 {
+      width: 300px;
+      height: 300px;
+    }
+  
+    .shape-3,
+    .shape-4 {
+      width: 150px;
+      height: 150px;
+    }
+  }
+  
+  @media (max-width: 767.98px) {
+    .contact-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+      margin-right: 1rem;
+    }
+  
+    .faq-item {
+      padding: 1.25rem;
+    }
+  }
+  
+  @media (max-width: 575.98px) {
+    .submit-button {
+      width: 100%;
+    }
+  }
+  

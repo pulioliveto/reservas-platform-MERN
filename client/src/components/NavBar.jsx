@@ -187,8 +187,8 @@ const Navbar = () => {
                 <Nav.Link as={Link} to="/como-funciona" className="mx-2">
                   Cómo funciona
                 </Nav.Link>
-                <Nav.Link as={Link} to="/precios" className="mx-2">
-                  Precios
+                <Nav.Link as={Link} to="/quienes-somos" className="mx-2">
+                  Quienes Somos
                 </Nav.Link>
                 <Nav.Link as={Link} to="/contacto" className="mx-2">
                   Contacto

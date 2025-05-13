@@ -15,6 +15,7 @@ import fs from 'fs';
 import { Server as SocketIOServer } from 'socket.io';
 import http from 'http';
 import employeeRoutes from './routes/employeeRoutes.js';
+import contactRoutes from "./routes/contactRoutes.js";
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -126,6 +127,7 @@ app.use('/api/auth', authRoutes);
 
 // Usar las rutas de Google Calendar
 app.use('/api', calendarRoutes);
+app.use("/api", contactRoutes);
 
 
 app.get('/', (req, res) => { res.send('¡Bienvenido a la plataforma de reservas!'); });
