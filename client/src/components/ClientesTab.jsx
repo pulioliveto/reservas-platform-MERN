@@ -34,8 +34,8 @@ const ClientesTab = ({ loadingReservas, errorReservas, reservas }) => {
         (r) =>
           (r.clienteNombre || "").toLowerCase().includes(s) ||
           (r.email || "").toLowerCase().includes(s) ||
-          (r.dni || "").toLowerCase().includes(s) ||
-          (r.telefono || "").toLowerCase().includes(s),
+          String(r.dni || "").toLowerCase().includes(s) ||
+          String(r.telefono || "").toLowerCase().includes(s)
       )
     }
     res = [...res].sort((a, b) => {
