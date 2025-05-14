@@ -33,9 +33,7 @@ const ClientesTab = ({ loadingReservas, errorReservas, reservas }) => {
       res = res.filter(
         (r) =>
           (r.clienteNombre || "").toLowerCase().includes(s) ||
-          (r.email || "").toLowerCase().includes(s) ||
-          String(r.dni || "").toLowerCase().includes(s) ||
-          String(r.telefono || "").toLowerCase().includes(s)
+          (r.email || "").toLowerCase().includes(s) 
       )
     }
     res = [...res].sort((a, b) => {
