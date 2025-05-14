@@ -1,7 +1,15 @@
+"use client"
+
 import { FaBell } from "react-icons/fa"
+import "../css/Notification.css"
 
 const NotificationIcon = ({ unreadCount, onClick }) => (
-  <div className="notification-icon-wrapper" onClick={onClick}>
+  <div
+    className="notification-icon-wrapper"
+    onClick={onClick}
+    role="button"
+    aria-label={`Notificaciones${unreadCount > 0 ? ` (${unreadCount} sin leer)` : ""}`}
+  >
     <div className="notification-icon">
       <FaBell />
     </div>

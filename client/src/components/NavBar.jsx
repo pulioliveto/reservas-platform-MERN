@@ -1,14 +1,18 @@
+"use client"
+
 import React, { useContext, useState, useEffect } from "react"
 import { AuthContext } from "../context/AuthContext"
 import { useNavigate, useLocation, Link } from "react-router-dom"
 import logo from "../img/logo.png"
 import "../css/MainPage.css"
+import "../css/Navbar.css"
 import { getUserBusinesses } from "../services/apiBusiness"
 import { getAuth } from "firebase/auth"
-import { Container, Navbar as BootstrapNavbar, Nav, Button, Dropdown } from "react-bootstrap"
+import { Container, Navbar as BootstrapNavbar, Nav, Button } from "react-bootstrap"
 import NotificationIcon from "./NotificationIcon"
 import NotificationDropdown from "./NotificationDropdown"
 import { io } from "socket.io-client"
+import { FaPlus, FaBriefcase, FaUsers, FaCalendarCheck, FaSignOutAlt, FaChevronDown } from "react-icons/fa"
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext)
@@ -18,18 +22,34 @@ const Navbar = () => {
   const [userBusinesses, setUserBusinesses] = useState([])
   const [notifications, setNotifications] = useState([])
   const [showNotifications, setShowNotifications] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const notificationRef = React.useRef(null)
   const userDropdownRef = React.useRef(null)
 
+  // Detectar si es dispositivo móvil
   useEffect(() => {
-    const publicRoutes = ["/login", "/privacidad", "/terminos", "/negocio"];
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 767.98)
+    }
+
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+
+    return () => {
+      window.removeEventListener("resize", checkMobile)
+    }
+  }, [])
+
+  useEffect(() => {
+    const publicRoutes = ["/login", "/privacidad", "/terminos", "/negocio"]
     if (
       !user &&
       !publicRoutes.some((route) => location.pathname === route || location.pathname.startsWith(route + "/"))
     ) {
-      navigate("/");
+      navigate("/")
     }
-  }, [user, navigate, location.pathname]);
+  }, [user, navigate, location.pathname])
 
   useEffect(() => {
     const fetchBusinesses = async () => {
@@ -153,6 +173,16 @@ const Navbar = () => {
       ) {
         setShowNotifications(false)
       }
+
+      // Para el dropdown de usuario
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(event.target) &&
+        dropdownOpen &&
+        !event.target.closest(".user-dropdown-toggle")
+      ) {
+        setDropdownOpen(false)
+      }
     }
 
     // Añadir evento de clic para dispositivos táctiles
@@ -164,12 +194,18 @@ const Navbar = () => {
       document.removeEventListener("click", handleClickOutside, { capture: true })
       document.removeEventListener("touchend", handleClickOutside, { capture: true })
     }
-  }, [showNotifications])
+  }, [showNotifications, dropdownOpen])
 
   // Cerrar dropdowns al cambiar de ruta
   useEffect(() => {
     setShowNotifications(false)
+    setDropdownOpen(false)
   }, [location.pathname])
+
+  // Función personalizada para manejar el dropdown
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen)
+  }
 
   return (
     <BootstrapNavbar expand="lg" className="navbar-light bg-white shadow-sm py-2">
@@ -177,8 +213,7 @@ const Navbar = () => {
         <BootstrapNavbar.Brand as={Link} to="/" className="d-flex align-items-center">
           <img src={logo || "/placeholder.svg"} alt="ReservaTurnos" height="50" className="me-2" />
         </BootstrapNavbar.Brand>
-        
-    
+
         {user && (
           <>
             <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
@@ -212,55 +247,79 @@ const Navbar = () => {
                   </div>
                 )}
 
-                <Dropdown align={{ lg: "end" }}>
-                  <Dropdown.Toggle
-                    as="div"
-                    className="d-flex align-items-center user-dropdown-toggle"
-                    style={{ cursor: "pointer" }}
-                    ref={userDropdownRef}
-                  >
-                    <img
-                      src={user.photoURL || "/placeholder.svg"}
-                      alt="Perfil"
-                      className="rounded-circle"
-                      style={{ width: "38px", height: "38px" }}
-                    />
-                    <span className="ms-2 d-none d-md-inline">{user.displayName}</span>
-                  </Dropdown.Toggle>
+                <div className="position-relative" ref={userDropdownRef}>
+                  <div className="user-dropdown-toggle d-flex align-items-center" onClick={toggleDropdown}>
+                    <img src={user.photoURL || "/placeholder.svg"} alt="Perfil" className="rounded-circle" />
+                    <span className="user-name d-none d-md-inline">{user.displayName}</span>
+                    <FaChevronDown className={`chevron-icon ${dropdownOpen ? "chevron-rotate" : ""}`} size={14} />
+                  </div>
 
-                  <Dropdown.Menu className="shadow border-0 user-dropdown-menu">
-                    <Dropdown.Item onClick={() => navigate("/crear-negocio")}>
-                      <i className="bi bi-plus-circle me-2"></i> Crear negocio
-                    </Dropdown.Item>
-
-                    {hasBusinesses && (
-                      <>
-                        <Dropdown.Divider />
-                        <Dropdown.Header>Administrador de Negocios</Dropdown.Header>
-                        <Dropdown.Item onClick={() => navigate("/tu-perfil")}>
-                          <i className="bi bi-briefcase me-2"></i> Mis negocios
-                        </Dropdown.Item>
-                        <Dropdown.Item
+                  {dropdownOpen && (
+                    <>
+                      {isMobile && (
+                        <div className="mobile-menu-overlay show" onClick={() => setDropdownOpen(false)}></div>
+                      )}
+                      <div className="user-dropdown-menu">
+                        <div
                           onClick={() => {
-                            if (userBusinesses.length > 0) {
-                              navigate(`/negocio/${userBusinesses[0]._id}?tab=clientes`)
-                            }
+                            navigate("/crear-negocio")
+                            setDropdownOpen(false)
                           }}
+                          className="dropdown-item"
                         >
-                          <i className="bi bi-people me-2"></i> Mis clientes
-                        </Dropdown.Item>
-                      </>
-                    )}
+                          <FaPlus className="text-primary" /> Crear negocio
+                        </div>
 
-                    <Dropdown.Divider />
-                    <Dropdown.Item onClick={() => navigate("/mis-turnos")}>
-                      <i className="bi bi-calendar-check me-2"></i> Mis turnos
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={logout}>
-                      <i className="bi bi-box-arrow-right me-2"></i> Desconectarse
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+                        {hasBusinesses && (
+                          <>
+                            <div className="dropdown-divider"></div>
+                            <div className="dropdown-header">Administrador de Negocios</div>
+                            <div
+                              onClick={() => {
+                                navigate("/tu-perfil")
+                                setDropdownOpen(false)
+                              }}
+                              className="dropdown-item"
+                            >
+                              <FaBriefcase className="text-primary" /> Mis negocios
+                            </div>
+                            <div
+                              onClick={() => {
+                                if (userBusinesses.length > 0) {
+                                  navigate(`/negocio/${userBusinesses[0]._id}?tab=clientes`)
+                                  setDropdownOpen(false)
+                                }
+                              }}
+                              className="dropdown-item"
+                            >
+                              <FaUsers className="text-primary" /> Mis clientes
+                            </div>
+                          </>
+                        )}
+
+                        <div className="dropdown-divider"></div>
+                        <div
+                          onClick={() => {
+                            navigate("/mis-turnos")
+                            setDropdownOpen(false)
+                          }}
+                          className="dropdown-item"
+                        >
+                          <FaCalendarCheck className="text-primary" /> Mis turnos
+                        </div>
+                        <div
+                          onClick={() => {
+                            logout()
+                            setDropdownOpen(false)
+                          }}
+                          className="dropdown-item"
+                        >
+                          <FaSignOutAlt className="text-danger" /> Desconectarse
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </BootstrapNavbar.Collapse>
           </>
@@ -268,7 +327,7 @@ const Navbar = () => {
 
         {!user && (
           <div className="ms-auto">
-            <Button variant="primary" onClick={() => navigate("/login")} className="rounded-pill px-4">
+            <Button variant="primary" onClick={() => navigate("/login")} className="rounded-pill px-4 btn-login">
               Iniciar sesión
             </Button>
           </div>
