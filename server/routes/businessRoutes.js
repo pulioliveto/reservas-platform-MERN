@@ -3,6 +3,7 @@ import Business from '../models/Business.js';
 import upload from '../upload.js';
 import { auth } from '../middleware/firebaseAuth.js';
 import { getUserBusinesses, updateBusiness } from '../controllers/businessControllers.js';
+import { addSpecialClosedDate, removeSpecialClosedDate } from '../controllers/specialDatesController.js';
 
 const router = express.Router();
 
@@ -155,5 +156,8 @@ router.delete('/:id', async (req, res) => {
 
 // Ruta para obtener los negocios del usuario autenticado
 router.get('/businesses/user', auth, getUserBusinesses);
+
+router.post('/:id/fechas-cierre', auth, addSpecialClosedDate);
+router.delete('/:id/fechas-cierre', auth, removeSpecialClosedDate);
 
 export default router;

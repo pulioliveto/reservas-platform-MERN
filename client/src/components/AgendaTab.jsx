@@ -2,13 +2,20 @@ import { FaCalendarAlt, FaInfoCircle } from "react-icons/fa"
 import CalendarioDias from "./CalendarioDias"
 import "../css/AgendaTab.css"
 
-const AgendaTab = ({ selectedDay, setSelectedDay, getDaySchedule, renderDayInfo }) => {
+const AgendaTab = ({ selectedDay, setSelectedDay, getDaySchedule, renderDayInfo, specialClosedDates }) => {
   // Función para determinar el estado del día
   const getDayStatus = (date) => {
     const daySchedule = getDaySchedule(date)
 
-    // Si no hay horarios o no hay intervalos, está cerrado
-    if (!daySchedule || !daySchedule.intervals?.length) {
+    const isSpecialClosed = Array.isArray(specialClosedDates) &&
+      specialClosedDates.some(
+        (d) => new Date(d).toDateString() === date.toDateString()
+      );
+
+    // Si el día está cerrado por horario fijo o por fecha especial:
+    const isClosed = !daySchedule?.intervals?.length || isSpecialClosed;
+
+    if (isClosed) {
       return "cerrado"
     }
 

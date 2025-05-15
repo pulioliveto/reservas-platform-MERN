@@ -46,7 +46,8 @@ const businessSchema = new mongoose.Schema({
   turnoDuration: { type: Number, required: true }, // Duración de cada turno en minutos
   createdBy: { type: String, required: true }, 
   createdAt: { type: Date, default: Date.now },
-  ownerEmail: { type: String, required: true } // Email del propietario
+  ownerEmail: { type: String, required: true }, // Email del propietario
+  specialClosedDates: [{ type: Date }]
 });
 
 export default mongoose.model('Business', businessSchema);

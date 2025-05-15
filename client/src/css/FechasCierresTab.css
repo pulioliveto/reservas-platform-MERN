@@ -1,0 +1,420 @@
+/* Estilos para la pestaña de Fechas de Cierre */
+.fechas-cierre-tab {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.fechas-header {
+  margin-bottom: 1.5rem;
+}
+
+.fechas-header-title {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  color: #333;
+}
+
+.fechas-header-icon {
+  color: #4a6bff;
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+}
+
+.fechas-form-container {
+  background-color: #f8faff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(74, 107, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.fechas-form-container:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.fechas-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.fechas-form-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.fechas-form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #495057;
+  display: flex;
+  align-items: center;
+}
+
+.fechas-date-input {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.6rem 1rem;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+.fechas-date-input:focus {
+  border-color: #4a6bff;
+  box-shadow: 0 0 0 0.25rem rgba(74, 107, 255, 0.25);
+}
+
+.fechas-checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+
+.fechas-checkbox {
+  margin-right: 0.5rem;
+}
+
+.fechas-checkbox-label {
+  font-weight: 500;
+  color: #495057;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.fechas-submit-btn {
+  background-color: #4a6bff;
+  border-color: #4a6bff;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+}
+
+.fechas-submit-btn:hover:not(:disabled) {
+  background-color: #3a5ae8;
+  border-color: #3a5ae8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(74, 107, 255, 0.2);
+}
+
+.fechas-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.fechas-submit-btn:disabled {
+  background-color: #b0bcff;
+  border-color: #b0bcff;
+  cursor: not-allowed;
+}
+
+.fechas-help-text {
+  margin-top: 0.75rem;
+  color: #6c757d;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+}
+
+.fechas-table-container {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-top: 1.5rem;
+}
+
+.fechas-month-group {
+  border-bottom: 1px solid #eaeaea;
+}
+
+.fechas-month-group:last-child {
+  border-bottom: none;
+}
+
+.fechas-month-header {
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.fechas-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.fechas-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.fechas-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.fechas-table tr:last-child td {
+  border-bottom: none;
+}
+
+.fechas-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.fechas-checkbox-column {
+  width: 40px;
+  text-align: center;
+}
+
+.fechas-date-checkbox {
+  margin: 0;
+}
+
+.fechas-date-cell {
+  font-weight: 500;
+  color: #333;
+}
+
+.fechas-action-cell {
+  text-align: center;
+  width: 100px;
+}
+
+.fechas-delete-btn {
+  background-color: transparent;
+  color: #dc3545;
+  border: none;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.fechas-delete-btn:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+.fechas-delete-btn:active {
+  transform: scale(0.95);
+}
+
+/* Estilos para la funcionalidad de selección múltiple */
+.fechas-bulk-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.fechas-select-all {
+  display: flex;
+  align-items: center;
+}
+
+.fechas-select-label {
+  font-weight: 500;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.fechas-bulk-delete {
+  display: flex;
+  align-items: center;
+}
+
+.fechas-delete-selected-btn {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.fechas-delete-selected-btn:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.fechas-confirm-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fechas-confirm-text {
+  font-weight: 500;
+  color: #dc3545;
+  margin-right: 0.5rem;
+}
+
+.fechas-cancel-btn,
+.fechas-confirm-btn {
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.fechas-cancel-btn:hover {
+  background-color: #e2e6ea;
+  border-color: #dae0e5;
+}
+
+.fechas-confirm-btn:hover:not(:disabled) {
+  background-color: #c82333;
+  border-color: #bd2130;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.fechas-empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.fechas-empty-icon {
+  font-size: 2.5rem;
+  color: #adb5bd;
+  margin-bottom: 1rem;
+}
+
+.fechas-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.fechas-spinner {
+  color: #4a6bff;
+  margin-bottom: 1rem;
+}
+
+.fechas-error {
+  background-color: #f8d7da;
+  color: #842029;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.fechas-error-icon {
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+}
+
+.fechas-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 50rem;
+  background-color: #f8f9fa;
+  color: #212529;
+  margin-left: 0.5rem;
+}
+
+.fechas-badge-count {
+  background-color: #4a6bff;
+  color: white;
+}
+
+/* Indicar selección en filas */
+.fechas-table tr.selected {
+  background-color: rgba(74, 107, 255, 0.05);
+}
+
+.fechas-table tr.selected:hover {
+  background-color: rgba(74, 107, 255, 0.1);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fechas-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Estilos responsivos */
+@media (max-width: 767.98px) {
+  .fechas-form {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .fechas-form-group {
+    width: 100%;
+  }
+
+  .fechas-checkbox-container {
+    margin-left: 0;
+    margin-bottom: 1rem;
+  }
+
+  .fechas-submit-btn {
+    width: 100%;
+  }
+
+  .fechas-bulk-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .fechas-confirm-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .fechas-confirm-text {
+    margin-bottom: 0.5rem;
+  }
+
+  .fechas-table th:first-child,
+  .fechas-table td:first-child {
+    padding-left: 0.5rem;
+  }
+
+  .fechas-table th:last-child,
+  .fechas-table td:last-child {
+    padding-right: 0.5rem;
+  }
+}

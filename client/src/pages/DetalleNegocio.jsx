@@ -15,8 +15,9 @@ import AgendaTab from "../components/AgendaTab"
 import ContactoTab from "../components/ContactoTab"
 import ClientesTab from "../components/ClientesTab"
 import EditarContacto from "../components/EditarContacto"
-import PersonalTab from "../components/PersonalTab"; // Asegúrate de tener este componente
+import PersonalTab from "../components/PersonalTab";
 import { FaPen, FaMapMarkerAlt, FaPhone, FaCalendarAlt, FaUsers, FaInfoCircle, FaUserTie } from "react-icons/fa" // Para el ícono de la pestaña Personal
+import FechasCierresTab from "../components/FechasCierresTab";
 
 const DetalleNegocio = () => {
   const { id } = useParams()
@@ -354,12 +355,27 @@ const DetalleNegocio = () => {
     }
   }
 
+  const handleFechasCierreChange = (fechas) => {
+    setBusiness((prev) => ({
+      ...prev,
+      specialClosedDates: fechas,
+    }));
+  };
+
   // Renderizar información del día
   const renderDayInfo = () => {
     if (!selectedDay || !business) return null
 
+    //Verifica si la fecha seleccionada tiene un cierre especial
+    const isSpecialClosed = Array.isArray(business.specialClosedDates) &&
+  business.specialClosedDates.some(
+    (d) => {
+      return new Date(d).toDateString() === selectedDay.toDateString();
+    }
+  );
+
     const daySchedule = getDaySchedule(selectedDay)
-    const isClosed = !daySchedule?.intervals?.length
+    const isClosed = !daySchedule?.intervals?.length || isSpecialClosed;
     const dayName = format(selectedDay, "EEEE", { locale: es })
 
     if (isClosed) {
@@ -368,7 +384,9 @@ const DetalleNegocio = () => {
           <div className="d-flex align-items-center">
             <FaInfoCircle className="me-2" size={20} />
             <div>
-              <strong>¡CERRADO!</strong> El negocio no abre los {dayName}.
+              <strong>¡CERRADO!</strong>{" "}{
+                isSpecialClosed ? "El negocio está cerrado por un cierre especial." : `El negocio no abre los ${dayName}.`
+              }
             </div>
           </div>
         </div>
@@ -531,6 +549,17 @@ const DetalleNegocio = () => {
                   </button>
                 </li>
               )}
+              {isOwner && (
+                <li className="nav-item">
+                  <button
+                    className={`nav-link ${activeTab === "cierres" ? "active" : ""}`}
+                    onClick={() => setActiveTab("cierres")}
+                  >
+                    <FaCalendarAlt className="me-2" />
+                    Cierres especiales
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
           <div className="card-body p-4">
@@ -540,6 +569,7 @@ const DetalleNegocio = () => {
                 setSelectedDay={setSelectedDay}
                 getDaySchedule={getDaySchedule}
                 renderDayInfo={renderDayInfo}
+                specialClosedDates={business.specialClosedDates}
               />
             )}
 
@@ -581,6 +611,10 @@ const DetalleNegocio = () => {
                 empleados={empleados}
                 onEmpleadosChange={fetchEmpleados}
               />
+            )}
+
+            {activeTab === "cierres" && isOwner && (
+                <FechasCierresTab negocioId={business._id} onFechasChange={handleFechasCierreChange} />
             )}
           </div>
         </div>
